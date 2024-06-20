@@ -36,7 +36,7 @@
 #include "sound.h"
 #include "scale.h"
 
-#define ESSID "eurobin_iot"
+#include "config.h"
 
 using namespace eurobin_iot;
 
@@ -169,7 +169,7 @@ namespace eurobin_iot
 		M5.Lcd.setTextSize(2);
 		M5.Lcd.setTextColor(BLUE);
 		M5.Lcd.printf("Eurobin IOT ROS2\n");
-		M5.Lcd.printf("SSID: %s\n", ESSID);
+		M5.Lcd.printf("SSID: %s\n", config::wifi::essid);
 		M5.Lcd.setTextColor(WHITE);
 		// check the time-of-flight
 		if (eurobin_iot::mode == eurobin_iot::modes::TOF)
@@ -213,30 +213,23 @@ namespace eurobin_iot
 		printf("starting Wifi...\n");
 		// Adding Wifi
 		// IPAddress agent_ip(192, 168, 100, 2); // should be deduced by DHCP?
-		IPAddress agent_ip(192, 168, 100, 2);
-		uint16_t agent_port = 8888;
-		char ssid[] = ESSID;
-		char psk[] = "R0b0t";
-		wifiMulti.addAP("eurobin_iot", "123456789");
+		wifiMulti.addAP(config::wifi::essid, config::wifi::password);
+
 		while (wifiMulti.run() != WL_CONNECTED)
 		{
 			delay(500);
 			printf("Waiting for wifi...\n");
 		}
-		// If the connection to wifi is established
-		// successfully.
-		// M5.lcd.println(WiFi.SSID());
 		M5.Lcd.setTextColor(GREEN, BLACK);
 		M5.lcd.print("RSSI: ");
 		M5.lcd.println(WiFi.RSSI());
 		M5.lcd.print("IP address: ");
 		M5.lcd.println(WiFi.localIP());
-
 		printf("Wifi OK, %s\n", WiFi.SSID());
-		// set_microros_wifi_transports(ssid, psk, agent_ip, agent_port); // this does not work!!
-		// we use this directly because we are already connected
+
+		IPAddress agent_ip(config::agent::ip[0], config::agent::ip[1], config::agent::ip[2], config::agent::ip[3]);
 		locator.address = agent_ip;
-		locator.port = agent_port;
+		locator.port = config::agent::port;
 		rmw_uros_set_custom_transport(
 			false,
 			(void *)&locator,
