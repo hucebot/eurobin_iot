@@ -1,7 +1,3 @@
-#define CONFIG_MICRO_ROS_APP_STACK 4000
-#define CONFIG_MICRO_ROS_APP_TASK_PRIO 5
-#define M5CORE2 //comment this line if you are using M5Atom 
-
 #include <Arduino.h>
 #ifdef M5CORE2
 #include <M5Core2.h>
@@ -19,12 +15,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <esp_log.h>
-#include <esp_system.h>
-
-#include <rcl/rcl.h>
 #include <rcl/error_handling.h>
 #include <std_msgs/msg/int32.h>
 #include <std_msgs/msg/int16_multi_array.h>
@@ -33,20 +23,11 @@
 #include <rclc/executor.h>
 #include <FastLED.h>
 
-#ifdef CONFIG_MICRO_ROS_ESP_XRCE_DDS_MIDDLEWARE
-#include <uros_network_interfaces.h>
-#include <rmw_microros/rmw_microros.h>
-#endif
-
 #include "bytes.h"
 #include "i2c.h"
 #include "tof.h"
 #include "sound.h"
 #include "scale.h"
-#include "hall.h"
-#include "check.h"
-#include "key.h"
-#include "wifi.h"
 
 using namespace eurobin_iot;
 
@@ -182,7 +163,7 @@ namespace eurobin_iot
 		M5.Lcd.setTextSize(2);
 		M5.Lcd.setTextColor(BLUE);
 		M5.Lcd.printf("Eurobin IOT ROS2\n");
-		M5.Lcd.printf("SSID: %s\n", ESSID);
+		M5.Lcd.printf("SSID: %s\n", config::wifi::essid);
 		M5.Lcd.setTextColor(WHITE);
 		#endif
 		
@@ -197,31 +178,22 @@ namespace eurobin_iot
 		printf("starting Wifi...\n");
 		// Adding Wifi
 		// IPAddress agent_ip(192, 168, 100, 2); // should be deduced by DHCP?
-		IPAddress agent_ip(192, 168, 50, 100);
-		uint16_t agent_port = 8888;
-		//char ssid[] = ESSID;
-		//char psk[] = "R0b0t";
-		wifiMulti.addAP(ESSID, PASSWORD);
 		while (wifiMulti.run() != WL_CONNECTED)
 		{
 			delay(500);
 			printf("Waiting for wifi...\n");
 		}
-		// If the connection to wifi is established
-		// successfully.
-		// M5.lcd.println(WiFi.SSID());
-		#ifdef M5CORE2
+
 		M5.Lcd.setTextColor(GREEN, BLACK);
 		M5.lcd.print("RSSI: ");
 		M5.lcd.println(WiFi.RSSI());
 		M5.lcd.print("IP address: ");
 		M5.lcd.println(WiFi.localIP());
-		#endif
 		printf("Wifi OK, %s\n", WiFi.SSID());
-		// set_microros_wifi_transports(ssid, psk, agent_ip, agent_port); // this does not work!!
-		// we use this directly because we are already connected
+		printf("Agent: %d.%d.%d.%d:%d\n", config::agent::ip[0], config::agent::ip[1], config::agent::ip[2], config::agent::ip[3], config::agent::port);
+		IPAddress agent_ip(config::agent::ip[0], config::agent::ip[1], config::agent::ip[2], config::agent::ip[3]);
 		locator.address = agent_ip;
-		locator.port = agent_port;
+		locator.port = config::agent::port;
 		rmw_uros_set_custom_transport(
 			false,
 			(void *)&locator,
@@ -230,9 +202,7 @@ namespace eurobin_iot
 			platformio_transport_write,
 			platformio_transport_read);
 
-		// set_microros_serial_transports(Serial);
 
-		// M5.Lcd.printf("Starting microros...\n");
 		RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
 
 		prefs.begin("eurobin_iot");
