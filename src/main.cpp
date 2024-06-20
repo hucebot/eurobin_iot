@@ -27,7 +27,7 @@
 
 #ifdef CONFIG_MICRO_ROS_ESP_XRCE_DDS_MIDDLEWARE
 #include <uros_network_interfaces.h>
-#include <rmw_microros/rmw_microros.h>
+#include <rmw_microros/rmw_microros.h>       
 #endif
 
 #include "bytes.h"
@@ -226,7 +226,7 @@ namespace eurobin_iot
 		M5.lcd.print("IP address: ");
 		M5.lcd.println(WiFi.localIP());
 		printf("Wifi OK, %s\n", WiFi.SSID());
-
+		printf("Agent: %d.%d.%d.%d:%d\n", config::agent::ip[0], config::agent::ip[1], config::agent::ip[2], config::agent::ip[3], config::agent::port);
 		IPAddress agent_ip(config::agent::ip[0], config::agent::ip[1], config::agent::ip[2], config::agent::ip[3]);
 		locator.address = agent_ip;
 		locator.port = config::agent::port;
@@ -238,9 +238,7 @@ namespace eurobin_iot
 			platformio_transport_write,
 			platformio_transport_read);
 
-		// set_microros_serial_transports(Serial);
 
-		// M5.Lcd.printf("Starting microros...\n");
 		RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
 
 		prefs.begin("eurobin_iot");
