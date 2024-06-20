@@ -2,8 +2,7 @@
 
 ## Concept
 
-The ideia is to make a software that is fairly easy to connect a sensor to the control and start to work without doing a lot of things.
-
+The ideia is to make a software that is fairly easy to connect a sensor to the control and start to work without doing a lot of things. It use Micro Ros and ROS2 to send and receive data from the sensors. 
 ## Hardware
 
 The project support for the moment Core2 from M5Stack, we are working to make it support for Atom Matrix.
@@ -42,19 +41,46 @@ After that, go to *main.cpp* and search for the line of code **IPAddress agent_i
 
 Now it's good to go, you can connect your Core2 and upload the code. Here is a image of a Core2 running the code.
 
-![image1](images/image1.jpeg)
+![image1](images/image1.jpeg){width=50}
 
 You can see on the screen some information like SSID, IP address and etc. You can see the **mode** that inform what sensor should be connected to the Core2, in this case it's the sensor ToF, it has too the data the sensor is seeding to the control. You can see a big number in a green background, this is the ID of the control, it must be a unique ID for each control, if there is 2 control with the same ID, you have to change it for one of them.
 
 If you want to change the sensor touch the middle button and keep it pressed for 5 seconds, it will change for the next mode, you can keep pressing the button to change multiple times the mode until it reach the wished mode. After you have the mode you want, connect the sensor and reset the Core2. It will restart the control and it's going to work with the sensor connected.
 
-![image1](images/image3.jpeg)
+![image3](images/image3.jpeg)
 
 If you want to change the ID, keep pressed the right button, it's going to start a counter and you have to keep the button pressed until the counter reach 50, after that the Core2 will restart automatically with a new ID.
 
-![image1](images/image4.jpeg)
+![image4](images/image4.jpeg)
 
-You can see if the 
+You can see if the Core2 is really publishing this information in a topic, you just have to create a docker container ussing the command
+
+```shell
+docker run -it --net host ros:humble
+```
+Inside the container you can check the topics working at the moment with the command 
+
+```shell
+ros2 topic list
+``` 
+
+Choose the topic you want to see the result and write the command 
+
+```shell
+ros2 topic echo name_topic
+```
+In our case, we want to see the distance of the sensor ToF in the control with the ID 95
+
+```shell
+ros2 topic echo eurobin_iot_95/tof
+```
+
+Bellow is the output from the terminal 
+
+![image5](images/image5.png)
+
+
+
 
 ## Funding
 
