@@ -12,23 +12,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <esp_log.h>
-#include <esp_system.h>
-
-#include <rcl/rcl.h>
 #include <rcl/error_handling.h>
 #include <std_msgs/msg/int32.h>
 #include <std_msgs/msg/int16_multi_array.h>
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
 #include <FastLED.h>
-
-#ifdef CONFIG_MICRO_ROS_ESP_XRCE_DDS_MIDDLEWARE
-#include <uros_network_interfaces.h>
-#include <rmw_microros/rmw_microros.h>       
-#endif
 
 #include "bytes.h"
 #include "i2c.h"
