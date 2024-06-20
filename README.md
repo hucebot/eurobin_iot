@@ -82,7 +82,7 @@ Bellow is the output from the terminal
 
 ![image5](images/image5.png)
 
-#Visualising Information from the context of a Washing Machine with a GUI
+# Visualising Information from the context of a Washing Machine with a GUI
 
 We have 3 sensors and we want to know if the door, the top drawer and the bottom drawer are opened or not. For this, 3 sensor are going to be used: 1 Hall sensor and 2 ToF. For the GUI we will use Pyqt6. 
 
@@ -100,7 +100,7 @@ sudo chmod +x command.sh
 
 Then execute the file with the absolute path of the folder ros2_ps/ as argument:
 
-```
+```shell
 ./command.h absolute_path_ros2_ws
 ```
 
@@ -115,6 +115,32 @@ ros2 launch meta_node parameters_launch.py
 
 This will start the node listener, this node is going to receive all the data from the sensors and publish them. You will see on the terminal the log with the information it is receiving.
 
+![image6](images/image6.png)
+
+To see the what the listener is publishing, open another terminal and enter the container, to enter the container you have to retrieve the ID first with the command:
+
+```shell
+docker ps
+```
+
+Copy the command and write the command to enter the container:
+
+```shell
+docker exec -it ID bash
+```
+
+Now, go to the folder ro2_sw and enter the commands:
+
+```shell
+source /opt/ros/$ROS_DISTRO/setup.bash
+source install/setup.bash
+ros2 run meta_node receiver
+```
+
+A window will open with the information received from the listener, you can see too the same information on the terminal.
+
+
+![image7](images/image7.png)
 
 
 
