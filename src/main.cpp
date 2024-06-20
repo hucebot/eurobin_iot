@@ -1,5 +1,3 @@
-#define CONFIG_MICRO_ROS_APP_STACK 4000
-#define CONFIG_MICRO_ROS_APP_TASK_PRIO 5
 #include <Arduino.h>
 #include <M5Core2.h>
 #include <WiFi.h>
