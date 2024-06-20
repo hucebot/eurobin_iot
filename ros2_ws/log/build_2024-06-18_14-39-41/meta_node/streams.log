@@ -1,0 +1,25 @@
+[0.533s] Invoking command in '/ros2_ws/src/meta_node': PYTHONPATH=/ros2_ws/build/meta_node/prefix_override:/ros2_ws/install/meta_node/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/meta_node build --build-base /ros2_ws/build/meta_node/build install --record /ros2_ws/build/meta_node/install.log --single-version-externally-managed install_data
+[0.750s] running egg_info
+[0.750s] writing ../../build/meta_node/meta_node.egg-info/PKG-INFO
+[0.751s] writing dependency_links to ../../build/meta_node/meta_node.egg-info/dependency_links.txt
+[0.751s] writing entry points to ../../build/meta_node/meta_node.egg-info/entry_points.txt
+[0.751s] writing requirements to ../../build/meta_node/meta_node.egg-info/requires.txt
+[0.751s] writing top-level names to ../../build/meta_node/meta_node.egg-info/top_level.txt
+[0.753s] reading manifest file '../../build/meta_node/meta_node.egg-info/SOURCES.txt'
+[0.780s] writing manifest file '../../build/meta_node/meta_node.egg-info/SOURCES.txt'
+[0.780s] running build
+[0.780s] running build_py
+[0.780s] copying meta_node/my_node.py -> /ros2_ws/build/meta_node/build/lib/meta_node
+[0.780s] running install
+[0.781s] running install_lib
+[0.781s] copying /ros2_ws/build/meta_node/build/lib/meta_node/my_node.py -> /ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node
+[0.782s] byte-compiling /ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node/my_node.py to my_node.cpython-310.pyc
+[0.783s] running install_data
+[0.783s] running install_egg_info
+[0.784s] removing '/ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node-0.0.0-py3.10.egg-info' (and everything under it)
+[0.785s] Copying ../../build/meta_node/meta_node.egg-info to /ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node-0.0.0-py3.10.egg-info
+[0.786s] running install_scripts
+[0.804s] Installing listener script to /ros2_ws/install/meta_node/lib/meta_node
+[0.804s] Installing receiver script to /ros2_ws/install/meta_node/lib/meta_node
+[0.804s] writing list of installed files to '/ros2_ws/build/meta_node/install.log'
+[0.824s] Invoked command in '/ros2_ws/src/meta_node' returned '0': PYTHONPATH=/ros2_ws/build/meta_node/prefix_override:/ros2_ws/install/meta_node/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/meta_node build --build-base /ros2_ws/build/meta_node/build install --record /ros2_ws/build/meta_node/install.log --single-version-externally-managed install_data
