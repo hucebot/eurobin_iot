@@ -21,7 +21,10 @@ All the sensors used are from the company [M5Stack](https://m5stack.com/), you c
 The project was developed under the Linux Ubuntu 22.04.4 LTS and PlatformIO from VScode.  
 First, intall the packages necessary to PlarformIO handle Micro Ros.
 
-`apt install -y git cmake python3-pip`
+```shell
+apt install -y git cmake python3-pip
+```
+
 
 It is needed to install **Docker** because it's gonna be necessary to see the topics publishing and receiving.
 
@@ -78,6 +81,39 @@ ros2 topic echo eurobin_iot_95/tof
 Bellow is the output from the terminal 
 
 ![image5](images/image5.png)
+
+#Visualising Information from the context of a Washing Machine with a GUI
+
+We have 3 sensors and we want to know if the door, the top drawer and the bottom drawer are opened or not. For this, 3 sensor are going to be used: 1 Hall sensor and 2 ToF. For the GUI we will use Pyqt6. 
+
+Go to the folder docker/ and build the dockerfile to create an image. To build the file, use the command: 
+
+```shell
+docker build .
+```
+
+After the image is created, run the .sh file to execute the commands and create a container from the image created by the dockerfile. First, give permission to execute the file
+
+```shell
+sudo chmod +x command.sh
+```
+
+Then execute the file with the absolute path of the folder ros2_ps/ as argument:
+
+```
+./command.h absolute_path_ros2_ws
+```
+
+Inside the container, go to the folder ros2_ws and write the commands:
+
+```shell
+rosdep install -i --from-path src --rosdistro humble -y
+colcon build --packages-select meta_node
+source install/setup.bash
+ros2 launch meta_node parameters_launch.py
+```
+
+This will start the node listener, this node is going to receive all the data from the sensors and publish them. You will see on the terminal the log with the information it is receiving.
 
 
 
