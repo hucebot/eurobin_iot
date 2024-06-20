@@ -1,7 +1,14 @@
 #define CONFIG_MICRO_ROS_APP_STACK 4000
 #define CONFIG_MICRO_ROS_APP_TASK_PRIO 5
+#define M5CORE2 //comment this line if you are using M5Atom 
+
 #include <Arduino.h>
+#ifdef M5CORE2
 #include <M5Core2.h>
+#endif
+#ifndef M5CORE2
+#include "M5Atom.h"
+#endif
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <micro_ros_platformio.h>
@@ -21,6 +28,7 @@
 #include <rcl/error_handling.h>
 #include <std_msgs/msg/int32.h>
 #include <std_msgs/msg/int16_multi_array.h>
+#include <std_msgs/msg/string.h>
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
 #include <FastLED.h>
@@ -35,8 +43,10 @@
 #include "tof.h"
 #include "sound.h"
 #include "scale.h"
-
-#define ESSID "eurobin_iot"
+#include "hall.h"
+#include "check.h"
+#include "key.h"
+#include "wifi.h"
 
 using namespace eurobin_iot;
 
@@ -58,17 +68,6 @@ namespace eurobin_iot
 			SIZE // number of modes
 		};
 	}
-	namespace key
-	{
-		static const uint8_t pin = 33;
-		static const uint8_t led_pin = 32;
-		CRGB leds[1];
-	}
-	namespace hall
-	{
-		static const uint8_t pin = 33;
-	}
-
 	class Node
 	{
 	public:
@@ -86,6 +85,7 @@ namespace eurobin_iot
 		int butt_c_activated = 0;
 		int butt_mode_activated = 0;
 		int16_t data_tof[3]; // signed because no default message for unsigned...
+		char16_t opened[20];
 
 		// micro-ros stuffs
 		rcl_node_t node;
@@ -110,26 +110,6 @@ namespace eurobin_iot
 	Node node;
 }
 
-#define RCCHECK(fn)                                                                             \
-	{                                                                                           \
-		rcl_ret_t temp_rc = fn;                                                                 \
-		if ((temp_rc != RCL_RET_OK))                                                            \
-		{                                                                                       \
-			printf("Failed status on line %d: %d. Aborting.\n", __LINE__, (int)temp_rc);        \
-			M5.Lcd.printf("Failed status on line %d: %d. Aborting.\n", __LINE__, (int)temp_rc); \
-			vTaskDelete(NULL);                                                                  \
-		}                                                                                       \
-	}
-#define RCSOFTCHECK(fn)                                                                           \
-	{                                                                                             \
-		rcl_ret_t temp_rc = fn;                                                                   \
-		if ((temp_rc != RCL_RET_OK))                                                              \
-		{                                                                                         \
-			printf("Failed status on line %d: %d. Continuing.\n", __LINE__, (int)temp_rc);        \
-			M5.Lcd.printf("Failed status on line %d: %d. Continuing.\n", __LINE__, (int)temp_rc); \
-		}                                                                                         \
-	}
-
 const char *get_mode(uint8_t mode)
 {
 	switch (mode)
@@ -149,6 +129,38 @@ const char *get_mode(uint8_t mode)
 	}
 }
 
+void setPinMode() {
+        switch (eurobin_iot::mode)
+        {
+        case eurobin_iot::modes::KEY:
+            {
+            key::setPin();
+            break;
+            }
+        case eurobin_iot::modes::HALL:
+            {
+            hall::setPin();
+            break;
+            }
+        case eurobin_iot::modes::SCALE:
+            {
+            scale::init();
+            break;
+            }
+        case eurobin_iot::modes::TOF:
+            {
+            tof::initializing();
+            break;
+            }
+        default:
+            {
+            printf("error");
+            break;
+            }
+        }
+    }
+
+
 namespace eurobin_iot
 {
 	void Node::init()
@@ -161,8 +173,9 @@ namespace eurobin_iot
 
 		if (eurobin_iot::mode == eurobin_iot::modes::TOF || eurobin_iot::mode == eurobin_iot::modes::SCALE)
 			Wire.begin(); // join i2c bus (address optional for master)
-		M5.begin();
 
+		#ifdef M5CORE2
+		M5.begin();
 		// LCD
 		M5.Lcd.fillScreen(BLACK); // Set the screen
 		M5.Lcd.setCursor(0, 0);
@@ -171,53 +184,24 @@ namespace eurobin_iot
 		M5.Lcd.printf("Eurobin IOT ROS2\n");
 		M5.Lcd.printf("SSID: %s\n", ESSID);
 		M5.Lcd.setTextColor(WHITE);
-		// check the time-of-flight
-		if (eurobin_iot::mode == eurobin_iot::modes::TOF)
-		{
-			Serial.println("Initializing I2C...");
-			Serial.print("Time of flight: ");
-			uint8_t error = tof::check();
-			if (tof::ok)
-				Serial.println("ok");
-			else
-			{
-				Serial.print("error ");
-				Serial.println(error);
-			}
-		}
+		#endif
+		
+		setPinMode();
 
-		// setup the key button
-		if (eurobin_iot::mode == eurobin_iot::modes::KEY)
-		{
-			pinMode(key::pin, INPUT_PULLUP);
-			FastLED.addLeds<SK6812, key::led_pin, GRB>(key::leds, 1);
-			key::leds[0] = CRGB::Blue;
-			FastLED.setBrightness(0);
-		}
-
-		// setup the hall sensor button
-		if (eurobin_iot::mode == eurobin_iot::modes::HALL)
-		{
-			pinMode(hall::pin, INPUT);
-		}
-
-		// scale
-		if (eurobin_iot::mode == eurobin_iot::modes::SCALE)
-		{
-			scale::init();
-		}
-
+		#ifdef M5CORE2
 		speaker.begin();
 		speaker.InitI2SSpeakOrMic(MODE_SPK);
+		#endif
+
 
 		printf("starting Wifi...\n");
 		// Adding Wifi
 		// IPAddress agent_ip(192, 168, 100, 2); // should be deduced by DHCP?
-		IPAddress agent_ip(192, 168, 100, 2);
+		IPAddress agent_ip(192, 168, 50, 100);
 		uint16_t agent_port = 8888;
-		char ssid[] = ESSID;
-		char psk[] = "R0b0t";
-		wifiMulti.addAP("eurobin_iot", "123456789");
+		//char ssid[] = ESSID;
+		//char psk[] = "R0b0t";
+		wifiMulti.addAP(ESSID, PASSWORD);
 		while (wifiMulti.run() != WL_CONNECTED)
 		{
 			delay(500);
@@ -226,12 +210,13 @@ namespace eurobin_iot
 		// If the connection to wifi is established
 		// successfully.
 		// M5.lcd.println(WiFi.SSID());
+		#ifdef M5CORE2
 		M5.Lcd.setTextColor(GREEN, BLACK);
 		M5.lcd.print("RSSI: ");
 		M5.lcd.println(WiFi.RSSI());
 		M5.lcd.print("IP address: ");
 		M5.lcd.println(WiFi.localIP());
-
+		#endif
 		printf("Wifi OK, %s\n", WiFi.SSID());
 		// set_microros_wifi_transports(ssid, psk, agent_ip, agent_port); // this does not work!!
 		// we use this directly because we are already connected
@@ -267,53 +252,30 @@ namespace eurobin_iot
 			button_topic_name.c_str()));
 
 		/// Time of flight
-		String tof_topic_name = node_name + "/tof";
-		msg_tof.data.capacity = 3;
-		msg_tof.data.size = 3;
-		msg_tof.data.data = data_tof;
-		if (tof::ok)
-		{
-			RCCHECK(rclc_publisher_init_default(
-				&pub_tof,
-				&node,
-				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int16MultiArray),
-				tof_topic_name.c_str()));
-		}
+		tof::createPublisher(msg_tof, data_tof, node_name, pub_tof, node);
 
 		// scale
-		String scale_topic_name = node_name + "/scale";
 		if (eurobin_iot::init_mode == eurobin_iot::modes::SCALE)
 		{
-			RCCHECK(rclc_publisher_init_default(
-				&pub_scale,
-				&node,
-				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-				scale_topic_name.c_str()));
+			scale::createPublisher(node_name, pub_scale, node);
 		}
 
 		// key
-		String key_topic_name = node_name + "/key";
+		//String key_topic_name = node_name + "/key";
 		if (eurobin_iot::init_mode == eurobin_iot::modes::KEY)
 		{
-			RCCHECK(rclc_publisher_init_default(
-				&pub_key,
-				&node,
-				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-				key_topic_name.c_str()));
+			key::createPublisher(node_name, pub_key, node);
 		}
 		// hall sensor
-		String hall_topic_name = node_name + "/hall";
+		//String hall_topic_name = node_name + "/hall";
 		if (eurobin_iot::init_mode == eurobin_iot::modes::HALL)
 		{
-			RCCHECK(rclc_publisher_init_default(
-				&pub_hall,
-				&node,
-				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-				hall_topic_name.c_str()));
+			hall::createPublisher(node_name, pub_hall, node);
 		}
 
   		RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
 
+		#ifdef M5CORE2
 		// show the ID
 		M5.Lcd.fillRoundRect(320 - 100, 240 - 70, 100, 70, 15, TFT_GREEN);
 		M5.Lcd.setCursor(320 - 100 + 5, 240 - 58);
@@ -326,10 +288,11 @@ namespace eurobin_iot
 		M5.Lcd.setCursor(150, 240 - 20);
 		M5.Lcd.setTextSize(2);
 		M5.Lcd.printf("mode");
+		#endif
 
 		// M5.Lcd.setTextColor(GREEN, BLACK);
 		// M5.Lcd.printf("ROS2 Node ready\n");
-		eurobin_iot::sound::ding(); // say we are ready!
+		//eurobin_iot::sound::ding(); // say we are ready!
 	}
 
 	void Node::loop()
@@ -359,63 +322,25 @@ namespace eurobin_iot
 		// time-of-flight
 		if (tof::ok)
 		{
-			uint16_t ambient_count, signal_count, dist;
-			tof::read(&ambient_count, &signal_count, &dist);
-			// M5.Lcd.setCursor(0, 110);
-			M5.Lcd.printf("Dist.: %d mm         \n", dist);
-			msg_tof.data.data[0] = dist;
-			msg_tof.data.data[1] = ambient_count;
-			msg_tof.data.data[2] = signal_count;
-			RCSOFTCHECK(rcl_publish(&pub_tof, &msg_tof, NULL));
+			tof::publish(msg_tof, pub_tof);
 		}
 
 		// scale
 		if (eurobin_iot::init_mode == eurobin_iot::modes::SCALE)
 		{
-			// scale::print();
-			int w = scale::weight();
-			msg_scale.data = w;
-			M5.Lcd.printf("weight: %d grams     \n", w);
-			RCSOFTCHECK(rcl_publish(&pub_scale, &msg_scale, NULL));
-			if (scale::button())
-			{
-				scale::tare();
-				Serial.println("scale::tare");
-			}
+			scale::publish(msg_scale, pub_scale);
 		}
 
 		// red key
 		if (eurobin_iot::init_mode == eurobin_iot::modes::KEY)
 		{
-			if (!digitalRead(key::pin))
-			{
-				key::leds[0] = CRGB::Blue;
-				M5.Lcd.println(("Key: 1       "));
-				FastLED.setBrightness(255);
-				FastLED.show();
-				msg_key.data = 1;
-				eurobin_iot::sound::doorbell();
-			}
-			else
-			{
-				M5.Lcd.println(("Key: 0      "));
-				key::leds[0] = CRGB::Red;
-				FastLED.setBrightness(255);
-				FastLED.show();
-				msg_key.data = 0;
-			}
-			RCSOFTCHECK(rcl_publish(&pub_key, &msg_key, NULL));
+			key::publish(msg_key, pub_key);
 		}
 
 		// hall sensor
 		if (eurobin_iot::init_mode == eurobin_iot::modes::HALL)
 		{
-			if (digitalRead(hall::pin))
-				msg_hall.data = 0;
-			else
-				msg_hall.data = 1;
-			M5.Lcd.printf("Hall: %d\n", msg_hall.data);
-			RCSOFTCHECK(rcl_publish(&pub_hall, &msg_hall, NULL));
+			hall::publish(msg_hall, pub_hall);
 		}
 
 		// mode
