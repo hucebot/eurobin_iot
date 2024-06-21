@@ -28,7 +28,7 @@ apt install -y git cmake python3-pip
 
 It is needed to install **Docker** because it's gonna be necessary to see the topics publishing and receiving.
 
-Clone the project and go to the folder *src/*. You need to configure the wifi so the control can communicate with the local network. Go to the file config_example.h and put the information about your network, then rename to confih.h.
+Clone the project and go to the folder *src/*. You need to configure the wifi so the control can communicate with the local network. Go to the file *config_example.h* and put the information about your network, then rename to *config.h*.
 
 Now it's good to go, you can connect your Core2 and upload the code. Here is a image of a Core2 running the code.
 
