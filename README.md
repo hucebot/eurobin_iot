@@ -15,6 +15,7 @@ All the sensors used are from the company [M5Stack](https://m5stack.com/), you c
 - [Scale](https://docs.m5stack.com/en/unit/scales)
 - [Hall](https://docs.m5stack.com/en/unit/hall)
 - [Key](https://docs.m5stack.com/en/unit/key)
+- [Rfid](https://docs.m5stack.com/en/unit/uhf_rfid)
 
 ## Compilation and Installation
 
@@ -70,9 +71,20 @@ Bellow is the output from the terminal
 
 ![image5](images/image5.png)
 
-# Visualising Information from the context of a Washing Machine with a GUI
+# Visualising Information in 3 Contexts with GUI
 
-We have 3 sensors and we want to know if the door, the top drawer and the bottom drawer are opened or not. For this, 3 sensor are going to be used: 1 Hall sensor and 2 ToF. For the GUI we will use Pyqt6. 
+In the folder *ros2_ws/src*, there are 3 different projects: 
+    - Washing Machine (meta_node)
+    - Detect Objects within a fridge (fridge)
+    - Robot race (timer)
+
+1. Washing Machine: we have 3 sensors and we want to know if the door, the top drawer and the bottom drawer are opened or not. For this, 3 sensor were used: 1 Hall sensor and 2 ToF.
+
+2. Detect Machine: We want to detect objects that are put inside the fridge, each object will have a tag and we will use the sensor UHF RFID to detect them. 
+
+3. Robot race: 
+
+For the GUI we will use Pyqt6. 
 
 Go to the folder docker/ and build the dockerfile to create an image. To build the file, use the command: 
 
@@ -86,19 +98,19 @@ After the image is created, run the .sh file to execute the commands and create 
 sudo chmod +x command.sh
 ```
 
-Then execute the file with the absolute path of the folder ros2_ps/ as argument:
+Then execute the file with the absolute path of the folder *ros2_ws* as argument:
 
 ```shell
-./command.h absolute_path_ros2_ws
+./command.h <absolute path of ros2_ws>
 ```
 
-Inside the container, go to the folder ros2_ws and write the commands:
+Inside the container, go to the folder *ros2_ws* and write the commands:
 
 ```shell
 rosdep install -i --from-path src --rosdistro humble -y
-colcon build --packages-select meta_node
+colcon build --packages-select <name of the package>
 source install/setup.bash
-ros2 launch meta_node parameters_launch.py
+ros2 launch <name of the package> parameters_launch.py
 ```
 
 This will start the node listener, this node is going to receive all the data from the sensors and publish them. You will see on the terminal the log with the information it is receiving.
