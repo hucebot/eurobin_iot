@@ -82,7 +82,7 @@ In the folder *ros2_ws/src*, there are 3 different projects:
 
 2. Detect Machine: We want to detect objects that are put inside the fridge, each object will have a tag and we will use the sensor UHF RFID to detect them. 
 
-3. Robot race: 
+3. Robot race: We have to points with sensor of detection, when the robot pass the point, it starts to count the time, when the robot arrive in the second point, the counter will stop and the screen will show how much time took to move between the two points.
 
 For the GUI we will use Pyqt6. 
 
