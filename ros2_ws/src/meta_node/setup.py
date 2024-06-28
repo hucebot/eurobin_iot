@@ -18,7 +18,7 @@ setup(
     zip_safe=True,
     maintainer='root',
     maintainer_email='root@todo.todo',
-    description='node that receive information from capteurs',
+    description='node that receive information from capteurs dish washer',
     license='MIT',
     tests_require=['pytest'],
     entry_points={

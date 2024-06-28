@@ -1,0 +1,38 @@
+[0.947s] Invoking command in '/ros2_ws/src/timer': PYTHONPATH=/ros2_ws/build/timer/prefix_override:/ros2_ws/install/timer/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/timer build --build-base /ros2_ws/build/timer/build install --record /ros2_ws/build/timer/install.log --single-version-externally-managed install_data
+[1.135s] running egg_info
+[1.135s] creating ../../build/timer/timer.egg-info
+[1.136s] writing ../../build/timer/timer.egg-info/PKG-INFO
+[1.136s] writing dependency_links to ../../build/timer/timer.egg-info/dependency_links.txt
+[1.136s] writing entry points to ../../build/timer/timer.egg-info/entry_points.txt
+[1.136s] writing requirements to ../../build/timer/timer.egg-info/requires.txt
+[1.136s] writing top-level names to ../../build/timer/timer.egg-info/top_level.txt
+[1.136s] writing manifest file '../../build/timer/timer.egg-info/SOURCES.txt'
+[1.138s] reading manifest file '../../build/timer/timer.egg-info/SOURCES.txt'
+[1.138s] adding license file 'LICENSE'
+[1.138s] writing manifest file '../../build/timer/timer.egg-info/SOURCES.txt'
+[1.138s] running build
+[1.139s] running build_py
+[1.139s] creating /ros2_ws/build/timer/build
+[1.139s] creating /ros2_ws/build/timer/build/lib
+[1.139s] creating /ros2_ws/build/timer/build/lib/timer
+[1.139s] copying timer/__init__.py -> /ros2_ws/build/timer/build/lib/timer
+[1.140s] copying timer/main.py -> /ros2_ws/build/timer/build/lib/timer
+[1.140s] running install
+[1.140s] running install_lib
+[1.141s] creating /ros2_ws/install/timer/lib/python3.10/site-packages/timer
+[1.141s] copying /ros2_ws/build/timer/build/lib/timer/__init__.py -> /ros2_ws/install/timer/lib/python3.10/site-packages/timer
+[1.141s] copying /ros2_ws/build/timer/build/lib/timer/main.py -> /ros2_ws/install/timer/lib/python3.10/site-packages/timer
+[1.142s] byte-compiling /ros2_ws/install/timer/lib/python3.10/site-packages/timer/__init__.py to __init__.cpython-310.pyc
+[1.142s] byte-compiling /ros2_ws/install/timer/lib/python3.10/site-packages/timer/main.py to main.cpython-310.pyc
+[1.142s] running install_data
+[1.142s] creating /ros2_ws/install/timer/share/ament_index
+[1.142s] creating /ros2_ws/install/timer/share/ament_index/resource_index
+[1.143s] creating /ros2_ws/install/timer/share/ament_index/resource_index/packages
+[1.143s] copying resource/timer -> /ros2_ws/install/timer/share/ament_index/resource_index/packages
+[1.143s] copying package.xml -> /ros2_ws/install/timer/share/timer
+[1.143s] running install_egg_info
+[1.145s] Copying ../../build/timer/timer.egg-info to /ros2_ws/install/timer/lib/python3.10/site-packages/timer-0.0.0-py3.10.egg-info
+[1.146s] running install_scripts
+[1.164s] Installing listener script to /ros2_ws/install/timer/lib/timer
+[1.165s] writing list of installed files to '/ros2_ws/build/timer/install.log'
+[1.190s] Invoked command in '/ros2_ws/src/timer' returned '0': PYTHONPATH=/ros2_ws/build/timer/prefix_override:/ros2_ws/install/timer/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/timer build --build-base /ros2_ws/build/timer/build install --record /ros2_ws/build/timer/install.log --single-version-externally-managed install_data

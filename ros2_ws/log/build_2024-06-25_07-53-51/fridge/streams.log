@@ -1,0 +1,25 @@
+[0.889s] Invoking command in '/ros2_ws/src/fridge': PYTHONPATH=/ros2_ws/build/fridge/prefix_override:/ros2_ws/install/fridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/fridge build --build-base /ros2_ws/build/fridge/build install --record /ros2_ws/build/fridge/install.log --single-version-externally-managed install_data
+[1.113s] running egg_info
+[1.114s] writing ../../build/fridge/fridge.egg-info/PKG-INFO
+[1.114s] writing dependency_links to ../../build/fridge/fridge.egg-info/dependency_links.txt
+[1.114s] writing entry points to ../../build/fridge/fridge.egg-info/entry_points.txt
+[1.115s] writing requirements to ../../build/fridge/fridge.egg-info/requires.txt
+[1.115s] writing top-level names to ../../build/fridge/fridge.egg-info/top_level.txt
+[1.117s] reading manifest file '../../build/fridge/fridge.egg-info/SOURCES.txt'
+[1.117s] adding license file 'LICENSE'
+[1.119s] writing manifest file '../../build/fridge/fridge.egg-info/SOURCES.txt'
+[1.119s] running build
+[1.119s] running build_py
+[1.119s] copying fridge/main.py -> /ros2_ws/build/fridge/build/lib/fridge
+[1.119s] running install
+[1.119s] running install_lib
+[1.120s] copying /ros2_ws/build/fridge/build/lib/fridge/main.py -> /ros2_ws/install/fridge/lib/python3.10/site-packages/fridge
+[1.121s] byte-compiling /ros2_ws/install/fridge/lib/python3.10/site-packages/fridge/main.py to main.cpython-310.pyc
+[1.122s] running install_data
+[1.122s] running install_egg_info
+[1.124s] removing '/ros2_ws/install/fridge/lib/python3.10/site-packages/fridge-0.0.0-py3.10.egg-info' (and everything under it)
+[1.124s] Copying ../../build/fridge/fridge.egg-info to /ros2_ws/install/fridge/lib/python3.10/site-packages/fridge-0.0.0-py3.10.egg-info
+[1.125s] running install_scripts
+[1.150s] Installing listener script to /ros2_ws/install/fridge/lib/fridge
+[1.151s] writing list of installed files to '/ros2_ws/build/fridge/install.log'
+[1.179s] Invoked command in '/ros2_ws/src/fridge' returned '0': PYTHONPATH=/ros2_ws/build/fridge/prefix_override:/ros2_ws/install/fridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/fridge build --build-base /ros2_ws/build/fridge/build install --record /ros2_ws/build/fridge/install.log --single-version-externally-managed install_data
