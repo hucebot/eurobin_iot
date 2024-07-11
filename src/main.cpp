@@ -201,7 +201,7 @@ namespace eurobin_iot
 			Serial.print("Time of flight: ");
 			uint8_t error = tof::check();
 			if (tof::ok) {
-				if(eurobin_iot::mode == eurobin_iot::modes::TOFM4){
+				if(eurobin_iot::mode != eurobin_iot::modes::TOFM2){
 					tof_sensor.init();
 					tof_sensor.setDistanceMode(VL53L1X::Short);
   					tof_sensor.setMeasurementTimingBudget(20000);
@@ -539,8 +539,7 @@ namespace eurobin_iot
 
 		// timer
 		if (eurobin_iot::init_mode == eurobin_iot::modes::TIMER && tof::ok) {
-			uint16_t ambient_count, signal_count, dist;
-			tof::read(&ambient_count, &signal_count, &dist);
+			uint16_t dist = tof_sensor.read();
 			M5.Lcd.printf("Dist.: %d mm         \n", dist);
 			if(dist < 200) {
 				msg_time.data = true;
