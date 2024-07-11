@@ -17,12 +17,13 @@
 #include <std_msgs/msg/int32.h>
 #include <std_msgs/msg/bool.h>
 #include <std_msgs/msg/int16_multi_array.h>
-//#include <std_msgs/msg/float32_multi_array.h>
+#include <std_msgs/msg/int16.h>
 #include <std_msgs/msg/string.h>
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
 #include <FastLED.h>
 #include "time.h"
+#include "VL53L1X.h"
 
 #include "bytes.h"
 #include "i2c.h"
@@ -39,6 +40,7 @@ namespace eurobin_iot
 	uint8_t mode = 0;
 	uint8_t init_mode = 0;
 	bool wifi = false;
+	VL53L1X tof_sensor;
 
 	namespace modes
 	{
@@ -46,11 +48,12 @@ namespace eurobin_iot
 		{
 			NONE = 0,
 			KEY,
-			TOF,
+			TOFM2,
+			TOFM4,
 			HALL,
 			SCALE,
 			RFID,
-			TIME,
+			TIMER,
 			SIZE // number of modes
 		};
 	}
@@ -68,6 +71,7 @@ namespace eurobin_iot
 	{
 		static const uint8_t rx = 33;
 		static const uint8_t tx = 32;
+		bool ok=false;
 	}
 	class Node
 	{
@@ -87,8 +91,6 @@ namespace eurobin_iot
 		int butt_c_activated = 0;
 		int butt_mode_activated = 0;
 		int16_t data_tof[3]; // signed because no default message for unsigned...
-		//float_t data_tof[3];
-		//uint8_t reade_buffer[4] = {0};
 		char msg_buffer[25];
 
 		// micro-ros stuffs
@@ -102,9 +104,10 @@ namespace eurobin_iot
 		// msgs and topics
 		rcl_publisher_t pub_button;
 		std_msgs__msg__Int32 msg_button;
-		rcl_publisher_t pub_tof;
-		std_msgs__msg__Int16MultiArray msg_tof;
-		//std_msgs__msg__Float32MultiArray msg_tof;
+		rcl_publisher_t pub_tofm2;
+		std_msgs__msg__Int16MultiArray msg_tofm2;
+		rcl_publisher_t pub_tofm4;
+		std_msgs__msg__Int16 msg_tofm4;
 		rcl_publisher_t pub_scale;
 		std_msgs__msg__Int32 msg_scale;
 		rcl_publisher_t pub_key;
@@ -148,15 +151,17 @@ const char *get_mode(uint8_t mode)
 	case 1:
 		return "key";
 	case 2:
-		return "ToF";
+		return "ToFM2";
 	case 3:
-		return "Hall";
+		return "ToFM4";
 	case 4:
-		return "Scale/force";
+		return "Hall";
 	case 5:
-		return "Rfid";
+		return "Scale/force";
 	case 6:
-		return "Time";
+		return "Rfid";
+	case 7:
+		return "Timer";
 	default:
 		return "error";
 	}
@@ -172,7 +177,10 @@ namespace eurobin_iot
 
 		Serial.printf("ROS_IOT -> MODE: %d %s\n", eurobin_iot::mode, get_mode(eurobin_iot::mode));
 
-		if (eurobin_iot::mode == eurobin_iot::modes::TOF || eurobin_iot::mode == eurobin_iot::modes::SCALE || eurobin_iot::mode == eurobin_iot::modes::TIME)
+		if (eurobin_iot::mode == eurobin_iot::modes::TOFM2 ||
+			eurobin_iot::mode == eurobin_iot::modes::TOFM4 || 
+			eurobin_iot::mode == eurobin_iot::modes::SCALE || 
+			eurobin_iot::mode == eurobin_iot::modes::TIMER)
 			Wire.begin(); // join i2c bus (address optional for master)
 		M5.begin();
 
@@ -185,13 +193,22 @@ namespace eurobin_iot
 		M5.Lcd.printf("SSID: %s\n", config::wifi::essid);
 		M5.Lcd.setTextColor(WHITE);
 		// check the time-of-flight
-		if (eurobin_iot::mode == eurobin_iot::modes::TOF || eurobin_iot::mode == eurobin_iot::modes::TIME)
+		if (eurobin_iot::mode == eurobin_iot::modes::TOFM2 ||
+			eurobin_iot::mode == eurobin_iot::modes::TOFM4 || 
+			eurobin_iot::mode == eurobin_iot::modes::TIMER)
 		{
 			Serial.println("Initializing I2C...");
 			Serial.print("Time of flight: ");
 			uint8_t error = tof::check();
-			if (tof::ok)
+			if (tof::ok) {
+				if(eurobin_iot::mode == eurobin_iot::modes::TOFM4){
+					tof_sensor.init();
+					tof_sensor.setDistanceMode(VL53L1X::Short);
+  					tof_sensor.setMeasurementTimingBudget(20000);
+					tof_sensor.startContinuous(20);
+				}
 				Serial.println("ok");
+			}
 			else
 			{
 				Serial.print("error ");
@@ -227,6 +244,7 @@ namespace eurobin_iot
 			if (info != "ERROR") {
 				Serial.println(info);
 				uhf.setTxPower(2600);
+				rfid::ok = true;
 			}
 			else {
 				Serial.println("Error connecting the RFID");
@@ -284,24 +302,35 @@ namespace eurobin_iot
 			ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
 			button_topic_name.c_str())); */
 
-		/// Time of flight
-		String tof_topic_name = node_name + "/tof";
-		msg_tof.data.capacity = 3;
-		msg_tof.data.size = 3;
-		msg_tof.data.data = data_tof;
-		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOF)
+		/// Time of flight M2
+		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOFM2)
 		{
+			String tof_topic_name = node_name + "/tofm2";
+			msg_tofm2.data.capacity = 3;
+			msg_tofm2.data.size = 3;
+			msg_tofm2.data.data = data_tof;
 			RCCHECK(rclc_publisher_init_default(
-				&pub_tof,
+				&pub_tofm2,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int16MultiArray),
 				tof_topic_name.c_str()));
 		}
+		/// Time of flight M4
+		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOFM4)
+		{
+			String tof_topic_name = node_name + "/tofm4";
+			RCCHECK(rclc_publisher_init_default(
+				&pub_tofm4,
+				&node,
+				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int16),
+				tof_topic_name.c_str()));
+		}
+
 
 		// scale
-		String scale_topic_name = node_name + "/scale";
 		if (eurobin_iot::init_mode == eurobin_iot::modes::SCALE)
 		{
+			String scale_topic_name = node_name + "/scale";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_scale,
 				&node,
@@ -310,9 +339,9 @@ namespace eurobin_iot
 		}
 
 		// key
-		String key_topic_name = node_name + "/key";
 		if (eurobin_iot::init_mode == eurobin_iot::modes::KEY)
 		{
+			String key_topic_name = node_name + "/key";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_key,
 				&node,
@@ -320,9 +349,9 @@ namespace eurobin_iot
 				key_topic_name.c_str()));
 		}
 		// hall sensor
-		String hall_topic_name = node_name + "/hall";
 		if (eurobin_iot::init_mode == eurobin_iot::modes::HALL)
 		{
+			String hall_topic_name = node_name + "/hall";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_hall,
 				&node,
@@ -331,12 +360,12 @@ namespace eurobin_iot
 		}
 
 		// rfid sensor
-		String hfid_topic_name = node_name + "/rfid";
-		msg_hfid.data.data = msg_buffer;
-		msg_hfid.data.capacity = sizeof(msg_buffer);
-		msg_hfid.data.size = 0;
 		if (eurobin_iot::init_mode == eurobin_iot::modes::RFID)
 		{
+			String hfid_topic_name = node_name + "/rfid";
+			msg_hfid.data.data = msg_buffer;
+			msg_hfid.data.capacity = sizeof(msg_buffer);
+			msg_hfid.data.size = 0;
 			RCCHECK(rclc_publisher_init_default(
 				&pub_hfid,
 				&node,
@@ -345,9 +374,9 @@ namespace eurobin_iot
 		}
 
 		//time
-		String time_topic_name = node_name + "/time";
-		if (eurobin_iot::init_mode == eurobin_iot::modes::TIME)
+		if (eurobin_iot::init_mode == eurobin_iot::modes::TIMER)
 		{
+			String time_topic_name = node_name + "/time";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_time,
 				&node,
@@ -399,26 +428,36 @@ namespace eurobin_iot
 		if (msg_button.data == 1)
 			eurobin_iot::sound::ding();
  */
-		// time-of-flight
-		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOF)
+		// time-of-flight M2
+		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOFM2)
 		{
 			uint16_t ambient_count, signal_count, dist;
-			//float_t angle;
 			tof::read(&ambient_count, &signal_count, &dist);
 			//angle = (dist > 55) ? atan(dist/97.) * 180/PI: 0.; 
 			//angle = atan(dist/155.) * 180/PI;
 			// M5.Lcd.setCursor(0, 110);
 			M5.Lcd.printf("Dist.: %d mm         \n", dist);
-			//M5.Lcd.printf("Angle.: %.1f degrees         \n", angle);
-			msg_tof.data.data[0] = dist;
-			//msg_tof.data.data[1] = angle;
-			msg_tof.data.data[1] = ambient_count;
-			msg_tof.data.data[2] = signal_count;
-			RCSOFTCHECK(rcl_publish(&pub_tof, &msg_tof, NULL));
+			//msg_tofm2.data.data[0] = tof_sensor.read();
+			//msg_tofm2.data.data[1] = angle;
+			msg_tofm2.data.data[0] = dist;
+			msg_tofm2.data.data[1] = signal_count;
+			msg_tofm2.data.data[2] = ambient_count;
+			RCSOFTCHECK(rcl_publish(&pub_tofm2, &msg_tofm2, NULL));
 		}
 
+		// time-of-flight M4
+		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOFM4 && tof::ok)
+		{
+
+			uint16_t dist = tof_sensor.read();
+			M5.Lcd.printf("Dist.: %d mm         \n", dist);
+			msg_tofm4.data = dist;
+			RCSOFTCHECK(rcl_publish(&pub_tofm4, &msg_tofm4, NULL));
+		}
+
+
 		// scale
-		if (eurobin_iot::init_mode == eurobin_iot::modes::SCALE)
+		if (eurobin_iot::init_mode == eurobin_iot::modes::SCALE && tof::ok)
 		{
 			// scale::print();
 			int w = scale::weight();
@@ -467,7 +506,7 @@ namespace eurobin_iot
 		}
 
 		// rfid
-		if (eurobin_iot::init_mode == eurobin_iot::modes::RFID)
+		if (eurobin_iot::init_mode == eurobin_iot::modes::RFID && rfid::ok)
 		{
 			uint8_t result = uhf.pollingMultiple(10);
 			if(result > 0) {
@@ -499,7 +538,7 @@ namespace eurobin_iot
 		}
 
 		// timer
-		if (eurobin_iot::init_mode == eurobin_iot::modes::TIME) {
+		if (eurobin_iot::init_mode == eurobin_iot::modes::TIMER && tof::ok) {
 			uint16_t ambient_count, signal_count, dist;
 			tof::read(&ambient_count, &signal_count, &dist);
 			M5.Lcd.printf("Dist.: %d mm         \n", dist);
