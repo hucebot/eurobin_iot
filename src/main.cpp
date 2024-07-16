@@ -22,7 +22,6 @@
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
 #include <FastLED.h>
-#include "time.h"
 #include "VL53L1X.h"
 
 #include "bytes.h"
@@ -30,6 +29,8 @@
 #include "tof.h"
 #include "sound.h"
 #include "scale.h"
+//#include "hall.h"
+//#include "key.h"
 
 #include "config.h"
 
@@ -92,6 +93,7 @@ namespace eurobin_iot
 		int butt_mode_activated = 0;
 		int16_t data_tof[3]; // signed because no default message for unsigned...
 		char msg_buffer[25];
+		String topic_name;
 
 		// micro-ros stuffs
 		rcl_node_t node;
@@ -147,9 +149,9 @@ const char *get_mode(uint8_t mode)
 	switch (mode)
 	{
 	case 0:
-		return "undefined";
+		return "Undefined";
 	case 1:
-		return "key";
+		return "Key";
 	case 2:
 		return "ToFM2";
 	case 3:
@@ -157,13 +159,13 @@ const char *get_mode(uint8_t mode)
 	case 4:
 		return "Hall";
 	case 5:
-		return "Scale/force";
+		return "Scale";
 	case 6:
 		return "Rfid";
 	case 7:
 		return "Timer";
 	default:
-		return "error";
+		return "Error";
 	}
 }
 
@@ -186,11 +188,17 @@ namespace eurobin_iot
 
 		// LCD
 		M5.Lcd.fillScreen(BLACK); // Set the screen
-		M5.Lcd.setCursor(0, 0);
+		M5.Lcd.fillRect(5,0,315,15, DARKGREY);
+		M5.Lcd.setCursor(90, 0);
 		M5.Lcd.setTextSize(2);
-		M5.Lcd.setTextColor(BLUE);
-		M5.Lcd.printf("Eurobin IOT ROS2\n");
-		M5.Lcd.printf("SSID: %s\n", config::wifi::essid);
+		M5.Lcd.setTextColor(WHITE);
+		M5.Lcd.printf("Eurobin IOT\n");
+		M5.Lcd.fillRect(5,20,180,35, DARKGREY);
+		M5.Lcd.setCursor(5, 20);
+		M5.Lcd.printf("SSID:\n");
+		M5.Lcd.setTextColor(GREEN);
+		M5.Lcd.setCursor(5, 40);
+		M5.Lcd.printf("%s", config::wifi::essid);
 		M5.Lcd.setTextColor(WHITE);
 		// check the time-of-flight
 		if (eurobin_iot::mode == eurobin_iot::modes::TOFM2 ||
@@ -265,10 +273,24 @@ namespace eurobin_iot
 			delay(500);
 			printf("Waiting for wifi...\n");
 		}
-		M5.Lcd.setTextColor(GREEN, BLACK);
+		M5.Lcd.fillRect(190,20,123,35, DARKGREY);
+		M5.Lcd.setCursor(193, 20);
+		M5.Lcd.setTextColor(WHITE);
 		M5.lcd.print("RSSI: ");
+		M5.Lcd.setTextColor(GREEN);
 		M5.lcd.println(WiFi.RSSI());
+		float battery = M5.Axp.GetBatVoltage();
+		float battery_porcentage = (battery < 3.2) ? 0:(battery - 3.2) * 100;
+		M5.Lcd.setCursor(193, 40);
+		M5.Lcd.setTextColor(WHITE);
+		M5.Lcd.printf("Power:");
+		M5.Lcd.setTextColor(GREEN);
+		M5.Lcd.printf("%.1f", battery_porcentage);
+		M5.Lcd.fillRect(5,60,310,15, DARKGREY);
+		M5.Lcd.setCursor(5, 60);
+		M5.Lcd.setTextColor(WHITE);
 		M5.lcd.print("IP address: ");
+		M5.Lcd.setTextColor(GREEN);
 		M5.lcd.println(WiFi.localIP());
 		printf("Wifi OK, %s\n", WiFi.SSID());
 		printf("Agent: %d.%d.%d.%d:%d\n", config::agent::ip[0], config::agent::ip[1], config::agent::ip[2], config::agent::ip[3], config::agent::port);
@@ -305,7 +327,7 @@ namespace eurobin_iot
 		/// Time of flight M2
 		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOFM2)
 		{
-			String tof_topic_name = node_name + "/tofm2";
+			topic_name = node_name + "/tofm2";
 			msg_tofm2.data.capacity = 3;
 			msg_tofm2.data.size = 3;
 			msg_tofm2.data.data = data_tof;
@@ -313,56 +335,56 @@ namespace eurobin_iot
 				&pub_tofm2,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int16MultiArray),
-				tof_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 		/// Time of flight M4
 		if (tof::ok && eurobin_iot::init_mode == eurobin_iot::modes::TOFM4)
 		{
-			String tof_topic_name = node_name + "/tofm4";
+			topic_name = node_name + "/tofm4";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_tofm4,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int16),
-				tof_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 
 
 		// scale
 		if (eurobin_iot::init_mode == eurobin_iot::modes::SCALE)
 		{
-			String scale_topic_name = node_name + "/scale";
+			topic_name = node_name + "/scale";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_scale,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-				scale_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 
 		// key
 		if (eurobin_iot::init_mode == eurobin_iot::modes::KEY)
 		{
-			String key_topic_name = node_name + "/key";
+			topic_name = node_name + "/key";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_key,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-				key_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 		// hall sensor
 		if (eurobin_iot::init_mode == eurobin_iot::modes::HALL)
 		{
-			String hall_topic_name = node_name + "/hall";
+			topic_name = node_name + "/hall";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_hall,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-				hall_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 
 		// rfid sensor
 		if (eurobin_iot::init_mode == eurobin_iot::modes::RFID)
 		{
-			String hfid_topic_name = node_name + "/rfid";
+			topic_name = node_name + "/rfid";
 			msg_hfid.data.data = msg_buffer;
 			msg_hfid.data.capacity = sizeof(msg_buffer);
 			msg_hfid.data.size = 0;
@@ -370,34 +392,51 @@ namespace eurobin_iot
 				&pub_hfid,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-				hfid_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 
 		//time
 		if (eurobin_iot::init_mode == eurobin_iot::modes::TIMER)
 		{
-			String time_topic_name = node_name + "/time";
+			topic_name = node_name + "/time";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_time,
 				&node,
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Bool),
-				time_topic_name.c_str()));
+				topic_name.c_str()));
 		}
 
   		RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
 
-		// show the ID
-		M5.Lcd.fillRoundRect(320 - 100, 240 - 70, 100, 70, 15, TFT_GREEN);
-		M5.Lcd.setCursor(320 - 100 + 5, 240 - 58);
-		M5.Lcd.setTextSize(14);
+		// show the topic name
+		M5.Lcd.fillRect(5,80, 315, 15, DARKGREY);
+		M5.Lcd.setCursor(5,80);
 		M5.Lcd.setTextColor(TFT_WHITE);
+		M5.Lcd.printf("Topic:");
+		M5.Lcd.setTextColor(TFT_GREEN);
+		M5.Lcd.printf("%s", topic_name.c_str());
+
+
+		// show the ID
+		M5.Lcd.fillRoundRect(320 - 100, 240 - 70, 100, 70, 15, TFT_YELLOW);
+		M5.Lcd.setCursor(320 - 100 + 10, 240 - 58);
+		M5.Lcd.setTextSize(14);
+		M5.Lcd.setTextColor(TFT_BLACK);
 		M5.Lcd.printf("%d", id);
 
 		// mode
-		M5.Lcd.fillRoundRect(140, 240 - 25, 60, 25, 10, TFT_GREEN);
+		M5.Lcd.fillRoundRect(140, 240 - 25, 60, 25, 10, TFT_YELLOW);
 		M5.Lcd.setCursor(150, 240 - 20);
 		M5.Lcd.setTextSize(2);
 		M5.Lcd.printf("mode");
+
+		M5.Lcd.setTextColor(TFT_WHITE);
+		M5.Lcd.setCursor(5, 105);
+
+		M5.Lcd.printf("Mode:");
+		M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+		M5.Lcd.printf("%s      ", get_mode(eurobin_iot::mode));
+		M5.Lcd.drawRect(0,100, 190, 65, RED);
 
 		// M5.Lcd.setTextColor(GREEN, BLACK);
 		// M5.Lcd.printf("ROS2 Node ready\n");
@@ -411,18 +450,25 @@ namespace eurobin_iot
 		usleep(100000);
 
 		if (eurobin_iot::mode != eurobin_iot::init_mode)
-		{
+		{	
+			M5.Lcd.setTextColor(TFT_WHITE);
+			M5.Lcd.setCursor(5, 105);
+			M5.Lcd.printf("Mode:");
+			M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+			M5.Lcd.printf("%s      ", get_mode(eurobin_iot::mode));
+			M5.Lcd.drawRect(0,100, 190, 65, RED);
 			M5.Lcd.setCursor(0, 240 - 20);
 			M5.Lcd.printf("-> RESET\n");
 		}
 
-		M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-		M5.Lcd.setCursor(0, 90);
-
-		M5.Lcd.printf("Mode:%s          \n", get_mode(eurobin_iot::mode));
-
-		// button
-		M5.Lcd.printf("Buttons: %d %d %d      \n", M5.BtnA.read(), M5.BtnB.read(), M5.BtnC.read());
+		
+		// buttons
+		M5.Lcd.setCursor(5, 125);
+		M5.Lcd.setTextColor(TFT_WHITE);
+		M5.Lcd.printf("Btns:");
+		M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+		M5.Lcd.printf("%d %d %d", M5.BtnA.read(), M5.BtnB.read(), M5.BtnC.read());
+		M5.Lcd.setCursor(5, 145);
 		/* msg_button.data = M5.BtnA.read();
 		RCSOFTCHECK(rcl_publish(&pub_button, &msg_button, NULL));
 		if (msg_button.data == 1)
@@ -433,12 +479,7 @@ namespace eurobin_iot
 		{
 			uint16_t ambient_count, signal_count, dist;
 			tof::read(&ambient_count, &signal_count, &dist);
-			//angle = (dist > 55) ? atan(dist/97.) * 180/PI: 0.; 
-			//angle = atan(dist/155.) * 180/PI;
-			// M5.Lcd.setCursor(0, 110);
-			M5.Lcd.printf("Dist.: %d mm         \n", dist);
-			//msg_tofm2.data.data[0] = tof_sensor.read();
-			//msg_tofm2.data.data[1] = angle;
+			M5.Lcd.printf("Dist: %d mm  \n", dist);
 			msg_tofm2.data.data[0] = dist;
 			msg_tofm2.data.data[1] = signal_count;
 			msg_tofm2.data.data[2] = ambient_count;
@@ -450,7 +491,7 @@ namespace eurobin_iot
 		{
 
 			uint16_t dist = tof_sensor.read();
-			M5.Lcd.printf("Dist.: %d mm         \n", dist);
+			M5.Lcd.printf("Dist: %d mm  \n", dist);
 			msg_tofm4.data = dist;
 			RCSOFTCHECK(rcl_publish(&pub_tofm4, &msg_tofm4, NULL));
 		}
@@ -462,7 +503,7 @@ namespace eurobin_iot
 			// scale::print();
 			int w = scale::weight();
 			msg_scale.data = w;
-			M5.Lcd.printf("weight: %d grams     \n", w);
+			M5.Lcd.printf("weight: %d g  \n", w);
 			RCSOFTCHECK(rcl_publish(&pub_scale, &msg_scale, NULL));
 			if (scale::button())
 			{
@@ -477,7 +518,7 @@ namespace eurobin_iot
 			if (!digitalRead(key::pin))
 			{
 				key::leds[0] = CRGB::Blue;
-				M5.Lcd.println(("Key: 1       "));
+				M5.Lcd.println(("Key: 1 "));
 				FastLED.setBrightness(255);
 				FastLED.show();
 				msg_key.data = 1;
@@ -485,7 +526,7 @@ namespace eurobin_iot
 			}
 			else
 			{
-				M5.Lcd.println(("Key: 0      "));
+				M5.Lcd.println(("Key: 0 "));
 				key::leds[0] = CRGB::Red;
 				FastLED.setBrightness(255);
 				FastLED.show();
@@ -540,7 +581,7 @@ namespace eurobin_iot
 		// timer
 		if (eurobin_iot::init_mode == eurobin_iot::modes::TIMER && tof::ok) {
 			uint16_t dist = tof_sensor.read();
-			M5.Lcd.printf("Dist.: %d mm         \n", dist);
+			M5.Lcd.printf("Dist: %d mm  \n", dist);
 			if(dist < 200) {
 				msg_time.data = true;
 				RCSOFTCHECK(rcl_publish(&pub_time, &msg_time, NULL));
@@ -550,6 +591,8 @@ namespace eurobin_iot
 		// mode
 		if (M5.BtnB.read())
 			butt_mode_activated++;
+		else 
+			butt_mode_activated = 0;
 		if (butt_mode_activated > 5)
 		{
 			eurobin_iot::mode = (eurobin_iot::mode + 1) % eurobin_iot::modes::SIZE;
@@ -558,9 +601,11 @@ namespace eurobin_iot
 		}
 
 		if (M5.BtnC.read())
-		{
+		{	
+			M5.Lcd.setTextColor(TFT_YELLOW, TFT_BLACK);
+			M5.Lcd.setCursor(5, 170);
 			butt_c_activated++;
-			M5.Lcd.printf("RESET ID [50] %d", butt_c_activated);
+			M5.Lcd.printf("RESET ID [50] %d ", butt_c_activated);
 		}
 		else
 			butt_c_activated = 0;
