@@ -1,3 +1,5 @@
+# Jour 18/07/2024
+
 # euROBIN IOT
 
 ## Concept
@@ -11,7 +13,8 @@ The project support for the moment Core2 from M5Stack, we are working to make it
 
 All the sensors used are from the company [M5Stack](https://m5stack.com/), you can see bellow the list of sensors used.
 
-- [Time of Flight (Tof)](https://docs.m5stack.com/en/unit/TOF)
+- [Time of Flight M2 (Tof)](https://docs.m5stack.com/en/unit/TOF)
+- [Time of Flight M4 (tof)](https://docs.m5stack.com/en/unit/Unit-ToF4M)
 - [Scale](https://docs.m5stack.com/en/unit/scales)
 - [Hall](https://docs.m5stack.com/en/unit/hall)
 - [Key](https://docs.m5stack.com/en/unit/key)
@@ -33,7 +36,7 @@ Clone the project and go to the folder *src/*. You need to configure the wifi so
 
 Now it's good to go, you can connect your Core2 and upload the code. Here is a image of a Core2 running the code.
 
-![image1](images/image1.jpeg){width=50}
+![image1](images/image1.jpeg)
 
 You can see on the screen some information like SSID, IP address and etc. You can see the **mode** that inform what sensor should be connected to the Core2, in this case it's the sensor ToF, it has too the data the sensor is seeding to the control. You can see a big number in a green background, this is the ID of the control, it must be a unique ID for each control, if there is 2 control with the same ID, you have to change it for one of them.
 
@@ -113,34 +116,11 @@ source install/setup.bash
 ros2 launch <name of the package> parameters_launch.py
 ```
 
-This will start the node listener, this node is going to receive all the data from the sensors and publish them. You will see on the terminal the log with the information it is receiving.
+This will start the node listener, this node is going to receive all the data from the sensors and open the UI window to see the information, you can see it on the terminal.
 
 ![image6](images/image6.png)
 
-To see the what the listener is publishing, open another terminal and enter the container, to enter the container you have to retrieve the ID first with the command:
 
-```shell
-docker ps
-```
-
-Copy the command and write the command to enter the container:
-
-```shell
-docker exec -it ID bash
-```
-
-Now, go to the folder ro2_sw and enter the commands:
-
-```shell
-source /opt/ros/$ROS_DISTRO/setup.bash
-source install/setup.bash
-ros2 run meta_node receiver
-```
-
-A window will open with the information received from the listener, you can see too the same information on the terminal.
-
-
-![image7](images/image7.png)
 
 
 
