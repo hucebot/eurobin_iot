@@ -44,7 +44,7 @@ namespace eurobin_iot {
         char message_scroll[100];
 	    int currentOffset = 0; // Current offset for scrolling
 	    const long interval = 1000; 
-	    unsigned long last_time;
+	    unsigned long last_time, current_time;
 	    int count_clicks = 0;
         CRGB colorMode = CRGB::Red;
         CRGB colorID = CRGB::White;
@@ -110,7 +110,7 @@ namespace eurobin_iot {
 
         bool double_click() {
             if(M5.Btn.wasPressed()) {
-                unsigned long current_time = millis();
+                current_time = millis();
                 if(count_clicks == 0) {
                     count_clicks++;
                     last_time = current_time;
@@ -159,6 +159,9 @@ namespace eurobin_iot {
         uint8_t id;
         float battery;
         float battery_percentage;
+        const long interval = 60000;
+        unsigned long current_time,start_time;
+        bool start=false;
         String topic_name;
         uint8_t mode;
         void init_ui_core2() {
@@ -167,23 +170,25 @@ namespace eurobin_iot {
             M5.Lcd.fillScreen(BLACK); 
 
             // Title
-            M5.Lcd.fillRect(5,0,315,15, DARKGREY);
+            M5.Lcd.fillRect(5,0,310,15, DARKGREY);
             M5.Lcd.setCursor(90, 0);
             M5.Lcd.setTextSize(2);
             M5.Lcd.setTextColor(WHITE);
             M5.Lcd.printf("Eurobin IOT\n");
 
             // SSID
-            M5.Lcd.fillRect(5,20,180,35, DARKGREY);
+            M5.Lcd.fillRect(5,20,310,35, DARKGREY);
+            //M5.Lcd.fillRect(185,35, 130, 20, DARKGREY);
             M5.Lcd.setCursor(5, 20);
             M5.Lcd.printf("SSID:\n");
             M5.Lcd.setTextColor(GREEN);
             M5.Lcd.setCursor(5, 40);
             M5.Lcd.printf("%s", config::wifi::essid);
+            
             M5.Lcd.setTextColor(WHITE);
 
             // RSSI
-            M5.Lcd.fillRect(190,20,123,35, DARKGREY);
+            //M5.Lcd.fillRect(190,20,125,20, DARKGREY);
             M5.Lcd.setCursor(193, 20);
             M5.Lcd.setTextColor(WHITE);
             M5.lcd.print("RSSI: ");
@@ -191,9 +196,10 @@ namespace eurobin_iot {
             M5.lcd.println(WiFi.RSSI());
 
             // Batery
+            M5.Lcd.drawRect(190,100, 125, 30, RED);
+            M5.Lcd.setCursor(195,105);
             battery = M5.Axp.GetBatVoltage();
             battery_percentage = (battery < 3.2) ? 0:(battery - 3.2) * 100;
-            M5.Lcd.setCursor(193, 40);
             M5.Lcd.setTextColor(WHITE);
             M5.Lcd.printf("Power:");
             M5.Lcd.setTextColor(GREEN);
@@ -208,7 +214,7 @@ namespace eurobin_iot {
             M5.lcd.println(WiFi.localIP());
 
             // Topic name
-            M5.Lcd.fillRect(5,80, 315, 15, DARKGREY);
+            M5.Lcd.fillRect(5,80, 310, 15, DARKGREY);
             M5.Lcd.setCursor(5,80);
             M5.Lcd.setTextColor(TFT_WHITE);
             M5.Lcd.printf("Topic:");
@@ -237,6 +243,21 @@ namespace eurobin_iot {
 
             // rectangle
             M5.Lcd.drawRect(0,100, 190, 65, RED);
+        }
+
+        void check_battery() {
+            if(!start) {
+                start_time = millis();
+                start = !start;
+            }
+            else {
+                current_time = millis();
+                if(current_time - start_time > interval) {
+                    battery = M5.Axp.GetBatVoltage();
+                    battery_percentage = (battery < 3.2) ? 0:(battery - 3.2) * 100;
+                    start = !start;
+                }
+            }
         }
     }
 #endif

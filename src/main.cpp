@@ -63,18 +63,26 @@ namespace eurobin_iot {
         update_sensors();
 
         if (mode != init_mode) {
-            // If mode has been changed, show on the screen the new mode and warn the user to reset core2
-            M5.Lcd.setTextColor(TFT_WHITE);
-			M5.Lcd.setCursor(5, 105);
-			M5.Lcd.printf("Mode:");
-			M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
-			M5.Lcd.printf("%s       ", get_mode(mode));
-			M5.Lcd.drawRect(0,100, 190, 65, RED);
             M5.Lcd.setCursor(0, 240 - 20);
             M5.Lcd.printf("-> RESET\n");
         }
 
-        
+        // mode
+        M5.Lcd.setTextColor(TFT_WHITE);
+		M5.Lcd.setCursor(5, 105);
+		M5.Lcd.printf("Mode:");
+		M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+		M5.Lcd.printf("%s       ", get_mode(mode));
+		M5.Lcd.drawRect(0,100, 190, 65, RED);
+
+        //battery 
+        // Batery
+        M5.Lcd.drawRect(190,100, 125, 30, RED);
+        M5.Lcd.setCursor(195,105);
+        M5.Lcd.setTextColor(WHITE);
+        M5.Lcd.printf("Power:");
+        M5.Lcd.setTextColor(GREEN);
+        M5.Lcd.printf("%.1f", init_ui_core2::battery_percentage);
 
         // button
         M5.Lcd.setCursor(5, 125);
