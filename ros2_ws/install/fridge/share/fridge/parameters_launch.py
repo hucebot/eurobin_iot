@@ -8,7 +8,7 @@ def generate_launch_description():
             executable='listener',
             name='fridge',
             parameters=[
-                {'capteur1': 'eurobin_iot_63/rfid'}  #eurobin_iot_ID/name of the sensor
+                {'capteur1': 'eurobin_iot_21/rfid'}  #eurobin_iot_ID/name of the sensor
             ]
         )
     ])

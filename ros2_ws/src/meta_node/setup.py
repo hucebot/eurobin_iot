@@ -23,8 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'listener = meta_node.my_node:main',
-            'receiver = meta_node.other_node:main',
+            'listener = meta_node.my_node:main'
         ],
     },
 )

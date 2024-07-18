@@ -8,9 +8,9 @@ def generate_launch_description():
             executable='listener',
             name='washing_machine',
             parameters=[
-                {'capteur1': 'eurobin_iot_95/hall'},  #eurobin_iot_ID/name of the sensor
-                {'capteur2': 'eurobin_iot_63/tof'},
-                {'capteur3': 'eurobin_iot_95/tof'}
+                {'capteur1': 'eurobin_iot_0/hall'},  #eurobin_iot_ID/name of the sensor
+                {'capteur2': 'eurobin_iot_38/tofm4'},
+                {'capteur3': 'eurobin_iot_95/tofm4'}
             ]
         )
     ])
