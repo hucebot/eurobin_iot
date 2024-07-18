@@ -12,6 +12,7 @@ namespace eurobin_iot
 
     namespace scale
     {
+        bool ok = false;
         void print()
         {
             int weight = loadcell.getWeight();
@@ -35,6 +36,7 @@ namespace eurobin_iot
                 Serial.println("scales connect error");
                 return;
             }
+            ok = true;
             bool ret = true;
             ret &= loadcell.setLEDSyncWeight(true);
             ret &= loadcell.setBtnOffsetControl(true);
@@ -57,14 +59,14 @@ namespace eurobin_iot
 				scale_topic_name.c_str()));
         }
 
-        void printDistanceLCD(int w) {
+        /* void printDistanceLCD(int w) {
             M5.Lcd.printf("weight: %d grams     \n", w);
-        }
+        } */
 
         void publish(std_msgs__msg__Int32 msg, rcl_publisher_t pub) {
             int w = scale::weight();
 			msg.data = w;
-			printDistanceLCD(w);
+			//printDistanceLCD(w);
 			RCSOFTCHECK(rcl_publish(&pub, &msg, NULL));
 			if (scale::button())
 			{
