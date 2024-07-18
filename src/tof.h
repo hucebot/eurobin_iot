@@ -52,9 +52,9 @@ namespace eurobin_iot {
             }
         }
 
-        void printDistanceLCD(uint16_t dist) {
+        /* void printDistanceLCD(uint16_t dist) {
             M5.Lcd.printf("Dist.: %d mm         \n", dist);
-        }
+        } */
 
         void publish(std_msgs__msg__Int16MultiArray msg, rcl_publisher_t pub) {
             read(&ambient_count, &signal_count, &dist);
@@ -62,7 +62,7 @@ namespace eurobin_iot {
 			msg.data.data[1] = ambient_count;
 			msg.data.data[2] = signal_count;
 			RCSOFTCHECK(rcl_publish(&pub, &msg, NULL));
-            printDistanceLCD(dist);
+            //printDistanceLCD(dist);
         }
 
         void initializing() {
