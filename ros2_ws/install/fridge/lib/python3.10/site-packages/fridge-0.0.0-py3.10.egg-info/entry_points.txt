@@ -1,3 +1,0 @@
-[console_scripts]
-listener = fridge.main:main
-
