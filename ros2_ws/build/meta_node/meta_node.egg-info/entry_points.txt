@@ -1,3 +1,0 @@
-[console_scripts]
-listener = meta_node.my_node:main
-
