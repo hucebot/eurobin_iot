@@ -53,7 +53,7 @@ namespace eurobin_iot {
 
         init_ros();
 
-        init_ui_core2::init_ui_core2();
+        ui_core2::init_ui_core2();
 
         eurobin_iot::sound::ding(); // say we are ready!
     }
@@ -74,15 +74,15 @@ namespace eurobin_iot {
 		M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
 		M5.Lcd.printf("%s       ", get_mode(mode));
 		M5.Lcd.drawRect(0,100, 190, 65, RED);
-
-        //battery 
+ 
         // Batery
-        M5.Lcd.drawRect(190,100, 125, 30, RED);
         M5.Lcd.setCursor(195,105);
         M5.Lcd.setTextColor(WHITE);
+        ui_core2::check_battery();
         M5.Lcd.printf("Power:");
-        M5.Lcd.setTextColor(GREEN);
-        M5.Lcd.printf("%.1f", init_ui_core2::battery_percentage);
+        M5.Lcd.setTextColor(GREEN, BLACK);
+        M5.Lcd.printf("%.1f", ui_core2::battery_percentage);
+        M5.Lcd.drawRect(190,100, 125, 30, RED);
 
         // button
         M5.Lcd.setCursor(5, 125);

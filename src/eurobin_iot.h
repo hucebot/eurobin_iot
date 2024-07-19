@@ -155,7 +155,7 @@ namespace eurobin_iot {
         }
     }
 #else
-    namespace init_ui_core2 {
+    namespace ui_core2 {
         uint8_t id;
         float battery;
         float battery_percentage;
@@ -202,7 +202,7 @@ namespace eurobin_iot {
             battery_percentage = (battery < 3.2) ? 0:(battery - 3.2) * 100;
             M5.Lcd.setTextColor(WHITE);
             M5.Lcd.printf("Power:");
-            M5.Lcd.setTextColor(GREEN);
+            M5.Lcd.setTextColor(GREEN, BLACK);
             M5.Lcd.printf("%.1f", battery_percentage);
 
             // IP adress
@@ -398,8 +398,8 @@ namespace eurobin_iot {
         if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
             Wire.begin(25,21);
 #else   
-        init_ui_core2::mode = mode;
-        init_ui_core2::id = id;
+        ui_core2::mode = mode;
+        ui_core2::id = id;
         M5.begin();
         if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
             Wire.begin(); // join i2c bus (address optional for master)
@@ -609,7 +609,7 @@ namespace eurobin_iot {
 				topic_name.c_str()));
 		}
 #ifdef EUROBIN_IOT_CORES2
-        init_ui_core2::topic_name = topic_name;
+        ui_core2::topic_name = topic_name;
 #endif
 
         RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
