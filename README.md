@@ -88,8 +88,6 @@ In the Image, you can see a red letter "E" and 2 green leds. The letter E actual
 
 The first green led (the higher one) indicates that the connection with the network was successful, the contrary it would show a red led. When you turn on the atom, it can starts with a led red but it's advised to wait a little becase the controller tries several times to connect with the network, so it can turn in green after some time.
 
-![image6](images/image6.jpeg)
-
 The second green led(the lower one) indicates that the connection I2C or the initialization with the sensor was successful, if not it would display a red led.  Only the sensors Tof (M2 and M4), Scale and Rfid shows this led, the others such as Hall and Key does not show because it's is just a digital read. 
 
 To change the mode it's just necessary to make a double click, if it's done correctly, the first column will start to blink (between red and blue), this indicate you can reset the controller so it will restart with the new mode.
