@@ -1,13 +1,11 @@
-# Jour 18/07/2024
-
-# euROBIN IOT
+# EUROBIN IOT
 
 ## Concept
 
 The ideia is to make a software that is fairly easy to connect a sensor to the control and start to work without doing a lot of things. It use Micro Ros and ROS2 to send and receive data from the sensors. 
 ## Hardware
 
-The project support for the moment Core2 from M5Stack, we are working to make it support for Atom Matrix.
+The project support for the moment [Core2](https://docs.m5stack.com/en/core/core2) and [Atom Matrix](https://docs.m5stack.com/en/core/atom_matrix) from M5Stack.
 
 ### Supported sensors
 
@@ -28,27 +26,27 @@ First, intall the packages necessary to PlarformIO handle Micro Ros.
 ```shell
 apt install -y git cmake python3-pip
 ```
+It is necessary to install **Docker** because it's used to see the topics publishing and receiving.
+Clone the project and go to the folder *src/*. You need to configure the wifi so the controller can communicate with the local network. Go to the file *config_example.h* and put the information about your network, then rename to *config.h*.
+To upload the code on the Core2 or Atom Matrix, you have to go in the file **platformio.ini** and choose the enviromment you want to use (atom or  m5stack-core2), after change it, save the file so it can be updated, then you can change the code and upload on the microcontroller.
 
+## Core 2
 
-It is needed to install **Docker** because it's gonna be necessary to see the topics publishing and receiving.
-
-Clone the project and go to the folder *src/*. You need to configure the wifi so the control can communicate with the local network. Go to the file *config_example.h* and put the information about your network, then rename to *config.h*.
-
-Now it's good to go, you can connect your Core2 and upload the code. Here is a image of a Core2 running the code.
+Here is a image of a Core2 running the code.
 
 ![image1](images/image1.jpeg)
 
-You can see on the screen some information like SSID, IP address and etc. You can see the **mode** that inform what sensor should be connected to the Core2, in this case it's the sensor ToF, it has too the data the sensor is seeding to the control. You can see a big number in a green background, this is the ID of the control, it must be a unique ID for each control, if there is 2 control with the same ID, you have to change it for one of them.
+You can see on the screen some information such as SSID, RSSI and IP Adress. You can see the **mode** that inform what sensor is working on the Core2, in this case it's the sensor ToFM4, it has the data the sensor is seeding to the control. The big number in a yellow background, this is the ID of the controller, it must be a unique ID for each control nad it is used to send information to a topic using ROS2, if there are 2 controllers with the same ID, you have to change it for one of them.
 
-If you want to change the sensor touch the middle button and keep it pressed for 5 seconds, it will change for the next mode, you can keep pressing the button to change multiple times the mode until it reach the wished mode. After you have the mode you want, connect the sensor and reset the Core2. It will restart the control and it's going to work with the sensor connected.
+If you want to change the sensor (mode), touch the middle button (the one bellow the sign "mode" in yellow box) and keep it pressed for 5 seconds, it will change for the next mode, you can keep pressing the button to change multiple times the mode until it reach the wished mode. After you have the mode you want, connect the sensor and reset the Core2. It will restart the control and it's going to work with the sensor connected.
 
-![image3](images/image3.jpeg)
+![image2](images/image2.jpeg)
 
 If you want to change the ID, keep pressed the right button, it's going to start a counter and you have to keep the button pressed until the counter reach 50, after that the Core2 will restart automatically with a new ID.
 
-![image4](images/image4.jpeg)
+![image3](images/image3.jpeg)
 
-You can see if the Core2 is really publishing this information in a topic, you just have to create a docker container ussing the command
+You can see if the Core2 is really publishing this information in a topic, you just have to create a docker container using the command bellow
 
 ```shell
 docker run -it --net host ros:humble
@@ -58,6 +56,8 @@ Inside the container you can check the topics working at the moment with the com
 ```shell
 ros2 topic list
 ``` 
+
+![image4](images/image4.jpeg)
 
 Choose the topic you want to see the result and write the command 
 
@@ -73,6 +73,10 @@ ros2 topic echo eurobin_iot_95/tof
 Bellow is the output from the terminal 
 
 ![image5](images/image5.png)
+
+## Atom Matrix
+
+teste
 
 # Visualising Information in 3 Contexts with GUI
 
