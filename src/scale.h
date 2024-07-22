@@ -36,13 +36,14 @@ namespace eurobin_iot
                 Serial.println("scales connect error");
                 return;
             }
-            ok = true;
             bool ret = true;
             ret &= loadcell.setLEDSyncWeight(true);
             ret &= loadcell.setBtnOffsetControl(true);
             ret &= loadcell.setLEDColor(0x0000ff);
-            if (ret)
+            if (ret) {
+                ok = true;
                 Serial.println("OK");
+            }
             else
                 Serial.println("INIT ERROR");
             loadcell.setBtnOffsetControl(false);

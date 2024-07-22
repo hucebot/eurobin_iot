@@ -198,13 +198,6 @@ namespace eurobin_iot {
 			usleep(2000000);
 			ESP.restart();
 		}
-
-		//static uint8_t c = 0;
-        
-		/* if (c++ % 2 == 0)
-			M5.dis.drawpix(4, 0x0000ff);        
-		else
-			M5.dis.drawpix(4, 0x000000);   */      
 		
     }
 } // namespace eurobin_iot

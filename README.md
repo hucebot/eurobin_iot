@@ -37,6 +37,9 @@ Here is a image of a Core2 running the code.
 ![image1](images/image1.jpeg)
 
 You can see on the screen some information such as SSID, RSSI and IP Adress. You can see the **mode** that inform what sensor is working on the Core2, in this case it's the sensor ToFM4, it has the data the sensor is seeding to the control. The big number in a yellow background, this is the ID of the controller, it must be a unique ID for each control nad it is used to send information to a topic using ROS2, if there are 2 controllers with the same ID, you have to change it for one of them.
+The power show the level of battery in percentage the Core2 has at the moment, it's updated each minute in the screen.
+
+The information **Topic** showed on the screen informs you what is the name of the topic that is publishing the information of the sensor.
 
 If you want to change the sensor (mode), touch the middle button (the one bellow the sign "mode" in yellow box) and keep it pressed for 5 seconds, it will change for the next mode, you can keep pressing the button to change multiple times the mode until it reach the wished mode. After you have the mode you want, connect the sensor and reset the Core2. It will restart the control and it's going to work with the sensor connected.
 
@@ -57,26 +60,49 @@ Inside the container you can check the topics working at the moment with the com
 ros2 topic list
 ``` 
 
-![image4](images/image4.jpeg)
+![image4](images/image4.png)
 
 Choose the topic you want to see the result and write the command 
 
 ```shell
-ros2 topic echo name_topic
+ros2 topic echo <name_of_the_topic>
 ```
-In our case, we want to see the distance of the sensor ToF in the control with the ID 95
+In our case, we want to see the distance of the sensor ToF in the control with the ID 0
 
 ```shell
-ros2 topic echo eurobin_iot_95/tof
+ros2 topic echo eurobin_iot_0/tofm4
 ```
 
-Bellow is the output from the terminal 
+Bellow is the output from the terminal, in this case is the distance in mm, this is the information the sensor is giving to the controller and then being publishing it. 
 
 ![image5](images/image5.png)
 
 ## Atom Matrix
 
-teste
+Here is a image of the Atom Matrix running the code.
+
+![image6](images/image6.jpeg)
+
+Because the microcontroller does not have a screen (It has a 5x5 matrix of leds), we have had to change the logic in how to show the information. 
+In the Image, you can see a red letter "E" and 2 green leds. The letter E actually makes part of the word Scale, so this is indicating the mode (sensor) in red color, the word scroll all the time to show the mode, the ID is showed too following the mode in white color. You can change the color of booth in the code (variables colorMode and colorID).
+
+The first green led (the higher one) indicates that the connection with the network was successful, the contrary it would show a red led. When you turn on the atom, it can starts with a led red but it's advised to wait a little becase the controller tries several times to connect with the network, so it can turn in green after some time.
+
+![image6](images/image6.jpeg)
+
+The second green led(the lower one) indicates that the connection I2C or the initialization with the sensor was successful, if not it would display a red led.  Only the sensors Tof (M2 and M4), Scale and Rfid shows this led, the others such as Hall and Key does not show because it's is just a digital read. 
+
+To change the mode it's just necessary to make a double click, if it's done correctly, the first column will start to blink (between red and blue), this indicate you can reset the controller so it will restart with the new mode.
+
+![image7](images/image7.jpeg)
+
+To change the ID, it's just necessary to keep pressing the button for 5 seconds, after this, all the matrix of leds will be blue to indicate that the controller is going to reset itself and when turn on again, it will have a new id.
+
+![image8](images/image8.jpeg)
+
+
+
+
 
 # Visualising Information in 3 Contexts with GUI
 
@@ -122,7 +148,7 @@ ros2 launch <name of the package> parameters_launch.py
 
 This will start the node listener, this node is going to receive all the data from the sensors and open the UI window to see the information, you can see it on the terminal.
 
-![image6](images/image6.png)
+![image9](images/image9.png)
 
 
 
