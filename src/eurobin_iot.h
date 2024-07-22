@@ -685,7 +685,7 @@ namespace eurobin_iot {
 
         // rfid sensor
 		if (init_mode == eurobin_iot::modes::RFID && rfid::ok) {
-			uint8_t result = uhf.pollingMultiple(10);
+			uint8_t result = uhf.pollingMultiple(5);
 			if(result > 0) {
 				for (uint8_t i = 0; i < result; i++) {
 					Serial.println("epc: " + uhf.cards[i].epc_str);
@@ -694,7 +694,6 @@ namespace eurobin_iot {
 					rfid_msg_buffer[sizeof(rfid_msg_buffer) - 1] = '\0';
 					msg_hfid.data.size = epc.length();
 					RCSOFTCHECK(rcl_publish(&pub_hfid, &msg_hfid, NULL));
-					delay(100);
 				}
 				Serial.println("----------------------");
 			}
@@ -707,7 +706,6 @@ namespace eurobin_iot {
 				rfid_msg_buffer[sizeof(rfid_msg_buffer) - 1] = '\0';
 				msg_hfid.data.size = no.length();
 				RCSOFTCHECK(rcl_publish(&pub_hfid, &msg_hfid, NULL));
-				delay(100);
 			}
 			
 		}
