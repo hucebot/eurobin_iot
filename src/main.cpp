@@ -1,9 +1,9 @@
 #include <Arduino.h>
 
-#ifdef EUROBIN_IOT_ATOM
-#include <M5Atom.h>
-#else
+#ifdef EUROBIN_IOT_CORES2
 #include <M5Core2.h>
+#else
+#include <M5Atom.h>
 #endif
 
 #include <WiFi.h>
@@ -155,7 +155,7 @@ namespace eurobin_iot {
     }
 } // namespace eurobin_iot
 ///////////////////////////////////////////////////
-#elif defined(EUROBIN_IOT_ATOM)
+#elif defined(EUROBIN_IOT_ATOM_MATRIX)
 
 namespace eurobin_iot {
     // Version for M5Core2
@@ -174,19 +174,19 @@ namespace eurobin_iot {
 
     void Node::loop()
     {
-        atom_display::displayMessageFrame();
-    	atom_display::currentOffset++;
-    	if (atom_display::currentOffset >= strlen(atom_display::message_scroll) * 6) {
-      		atom_display::currentOffset = 0;
+        atom_matrix_display::displayMessageFrame();
+    	atom_matrix_display::currentOffset++;
+    	if (atom_matrix_display::currentOffset >= strlen(atom_matrix_display::message_scroll) * 6) {
+      		atom_matrix_display::currentOffset = 0;
     	}
 
 
         update_sensors();
 
-        if(atom_display::double_click()) {
+        if(atom_matrix_display::double_click()) {
 			mode = (mode + 1) % modes::SIZE;
 			prefs.putUInt("mode", mode);
-			atom_display::reset_id_mode_display();
+			atom_matrix_display::reset_id_mode_display();
 		}
 
 		if(M5.Btn.pressedFor(5000)) {
@@ -199,6 +199,40 @@ namespace eurobin_iot {
 			ESP.restart();
 		}
 		
+    }
+} // namespace eurobin_iot
+///////////////////////////////
+#else defined(EUROBIN_IOT_ATOM_LITE)
+
+namespace eurobin_iot {
+    // Version for M5Core2
+    void Node::init()
+    {
+        init_m5();
+		       
+        init_wifi();
+	        
+        init_sensors();
+		
+        init_ros();        
+
+    }
+
+    void Node::loop()
+    {
+        /* atom_lite_display::display(mode, atom_lite_display::color);
+        if(atom_lite_display::color == 4) 
+            atom_lite_display::color = 0;
+        else
+            atom_lite_display::color++; */
+        
+        update_sensors();
+
+        if(M5.Btn.pressedFor(5000)) {
+			mode = (mode + 1) % modes::SIZE;
+			prefs.putUInt("mode", mode);
+			atom_lite::reset_mode();
+		}
     }
 } // namespace eurobin_iot
 

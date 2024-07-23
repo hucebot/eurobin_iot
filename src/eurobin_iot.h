@@ -39,13 +39,13 @@ namespace eurobin_iot {
         }
     }
 
-#ifdef EUROBIN_IOT_ATOM
-    namespace atom_display {
+#ifdef EUROBIN_IOT_ATOM_MATRIX
+    namespace atom_matrix_display {
         char message_scroll[100];
-	    int currentOffset = 0; // Current offset for scrolling
-	    const long interval = 1000; 
+	    uint8_t currentOffset = 0; // Current offset for scrolling
+        const long interval = 1000; 
 	    unsigned long last_time, current_time;
-	    int count_clicks = 0;
+	    uint8_t count_clicks = 0;
         CRGB colorMode = CRGB::Red;
         CRGB colorID = CRGB::White;
         uint8_t charBitmaps[][5] PROGMEM = {
@@ -94,20 +94,6 @@ namespace eurobin_iot {
             }
         }
 
-        void reset_id_mode_display() {
-            bool change = false;
-            while(true) {
-                CRGB color = change ? CRGB::Red : CRGB::Blue;
-                for (int8_t i = 0; i < 25; i++) {
-                    if(i == 0 || i == 5 || i == 10 || i == 15 || i == 20) {
-                        M5.dis.drawpix(i, color);
-                    }
-                }
-                change = !change;
-                usleep(200000);
-            }
-        }
-
         bool double_click() {
             if(M5.Btn.wasPressed()) {
                 current_time = millis();
@@ -128,6 +114,21 @@ namespace eurobin_iot {
             }
             return false;
         }
+
+        void reset_id_mode_display() {
+            bool change = false;
+            while(true) {
+                CRGB color = change ? CRGB::Red : CRGB::Blue;
+                for (int8_t i = 0; i < 25; i++) {
+                    if(i == 0 || i == 5 || i == 10 || i == 15 || i == 20) {
+                        M5.dis.drawpix(i, color);
+                    }
+                }
+                change = !change;
+                usleep(200000);
+            }
+        }
+
 
         void displayCharacter(int x, int y, uint8_t character[5], CRGB color) {
             for (int i = 0; i < 5; i++) {
@@ -154,7 +155,7 @@ namespace eurobin_iot {
             }
         }
     }
-#else
+#elif EUROBIN_IOT_CORES2
     namespace ui_core2 {
         uint8_t id;
         float battery;
@@ -260,6 +261,186 @@ namespace eurobin_iot {
             }
         }
     }
+
+#else
+
+namespace atom_lite {
+    /* uint8_t color = 0;
+    void display(uint8_t mode, uint8_t color) {
+        switch (mode)
+        {
+        case 0: //Underfined
+            M5.dis.drawpix(0, CRGB::Black);
+            break;
+        case 1: // key
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        case 2: //tofm2
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        case 3: // tofm4
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        case 4: //hall
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        case 5: //scale
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        case 6: //rfid
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        case 7:
+            switch (color)
+            {
+            case 0:
+                M5.dis.drawpix(0, CRGB::White);
+                break;
+            case 1:
+                M5.dis.drawpix(0, CRGB::Red);
+                break;
+            case 2:
+                M5.dis.drawpix(0, CRGB::Green);
+                break;
+            case 3:
+                M5.dis.drawpix(0, CRGB::Blue);
+                break;
+            case 4:
+                M5.dis.drawpix(0, CRGB::Black);
+                break;
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+    } */
+
+    void reset_mode() {
+            bool change = false;
+            while(true) {
+                CRGB color = change ? CRGB::Red : CRGB::Blue;
+                M5.dis.drawpix(0, color);
+                change = !change;
+                usleep(200000);
+            }
+    }
+}
 #endif
 
     namespace key {
@@ -387,22 +568,29 @@ namespace eurobin_iot {
         mode = prefs.getUInt("mode", 0);
         init_mode = mode;
         prefs.begin("eurobin_iot");
+#ifdef EUROBIN_IOT_ATOM_LITE
+        id = config::atom_lite::id;
+#else
         id = prefs.getUInt("id", 0);
+#endif
 
         Serial.printf("ROS_IOT -> MODE: %d %s\n", mode, get_mode(mode));
-#ifdef EUROBIN_IOT_ATOM
-        String config = (0 <= id && id <= 9 ) ? "%s0%d":"%s%d";
-        snprintf(atom_display::message_scroll, sizeof(atom_display::message_scroll), config.c_str(), get_mode(mode), id);
-		//     void begin(bool SerialEnable = true, bool I2CEnable = true, bool DisplayEnable = false);
-		M5.begin(true, true, true); // enable the display matrix
-        if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
-            Wire.begin(25,21);
-#else   
+#ifdef EUROBIN_IOT_CORES2
+        
         ui_core2::mode = mode;
         ui_core2::id = id;
         M5.begin();
         if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
             Wire.begin(); // join i2c bus (address optional for master)
+#elif EUROBIN_IOT_ATOM_MATRIX
+        String config = (0 <= id && id <= 9 ) ? "%s0%d":"%s%d";
+        snprintf(atom_matrix_display::message_scroll, sizeof(atom_matrix_display::message_scroll), config.c_str(), get_mode(mode), id);
+#endif
+#ifdef ATOM
+		//     void begin(bool SerialEnable = true, bool I2CEnable = true, bool DisplayEnable = false);
+		M5.begin(true, true, true); // enable the display matrix
+        if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
+            Wire.begin(25,21);
 #endif
     }
 
@@ -420,13 +608,13 @@ namespace eurobin_iot {
   					tof_sensor.setMeasurementTimingBudget(20000);
 					tof_sensor.startContinuous(20);
 				}
-                #ifdef EUROBIN_IOT_ATOM
+                #ifdef EUROBIN_IOT_ATOM_MATRIX
                 M5.dis.drawpix(5, CRGB::Green);
                 #endif
                 Serial.println("ok");
             }
             else {
-                #ifdef EUROBIN_IOT_ATOM
+                #ifdef EUROBIN_IOT_ATOM_MATRIX
                 M5.dis.drawpix(5, CRGB::Red);
                 #endif
                 Serial.print("error ");
@@ -452,7 +640,7 @@ namespace eurobin_iot {
         // scale
         if (mode == modes::SCALE) {
             scale::init();
-            #ifdef EUROBIN_IOT_ATOM
+            #ifdef EUROBIN_IOT_ATOM_MATRIX
 			if(scale::ok) {
 				M5.dis.drawpix(5, CRGB::Green);
 			}
@@ -467,7 +655,7 @@ namespace eurobin_iot {
 			uhf.begin(&Serial2, 115200, rfid::rx, rfid::tx, false);
 			String info = uhf.getVersion();
 			if (info != "ERROR") {
-                #ifdef EUROBIN_IOT_ATOM
+                #ifdef EUROBIN_IOT_ATOM_MATRIX
                 M5.dis.drawpix(5, CRGB::Green);
                 #endif
 				Serial.println(info);
@@ -475,7 +663,7 @@ namespace eurobin_iot {
 				rfid::ok = true;
 			}
 			else {
-                #ifdef EUROBIN_IOT_ATOM
+                #ifdef EUROBIN_IOT_ATOM_MATRIX
                 M5.dis.drawpix(5, CRGB::Red);
                 #endif
 				Serial.println("Error connecting the RFID");
@@ -494,11 +682,11 @@ namespace eurobin_iot {
         while (wifiMulti.run() != WL_CONNECTED) {
             delay(500);
             printf("Waiting for wifi...\n");
-            #ifdef EUROBIN_IOT_ATOM
+            #ifdef ATOM
             M5.dis.drawpix(0, CRGB::Red);
             #endif
         }
-        #ifdef EUROBIN_IOT_ATOM
+        #ifdef ATOM
         M5.dis.drawpix(0, CRGB::Green);
         #endif
         printf("Wifi OK\n");
@@ -519,6 +707,8 @@ namespace eurobin_iot {
             platformio_transport_read);
 
         RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+
+
 
         printf("My ID is: %d\n", id);
         String node_name = String("eurobin_iot_") + String(id);
@@ -719,6 +909,7 @@ namespace eurobin_iot {
 		}
 
         rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+
         usleep(100000);
     }
 } // namespace eurobin_iot
