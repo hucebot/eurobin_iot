@@ -25,6 +25,7 @@
 #include <std_msgs/msg/int16_multi_array.h>
 #include <std_msgs/msg/int16.h>
 #include <std_msgs/msg/string.h>
+#include <std_srvs/srv/empty.h>
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
 #include <FastLED.h>
@@ -40,7 +41,7 @@
 
 ///////////////////////////////////////////////////
 #ifdef EUROBIN_IOT_CORES2
-
+// Core 2
 namespace eurobin_iot {
     // Version for M5Core2
     void Node::init()
@@ -62,9 +63,11 @@ namespace eurobin_iot {
     {
         update_sensors();
 
-        if (mode != init_mode) {
+        if ((mode != init_mode) || callback_service::service) {
+            mode = callback_service::mode;
             M5.Lcd.setCursor(0, 240 - 20);
             M5.Lcd.printf("-> RESET\n");
+            callback_service::service = false;
         }
 
         // mode
@@ -119,7 +122,7 @@ namespace eurobin_iot {
             M5.Lcd.printf("Hall:%d", msg_hall.data);
 
         // timer 
-        if(init_mode == modes::TIMER && tof::ok) {
+        if(init_mode == modes::TIMER) {
             M5.Lcd.printf("Timer:%d", msg_timer.data);
         }
 
@@ -131,6 +134,7 @@ namespace eurobin_iot {
         if (butt_mode_activated > 5) {
             mode = (mode + 1) % modes::SIZE;
             prefs.putUInt("mode", mode);
+            callback_service::mode = mode;
             butt_mode_activated = 0;
         }
 
@@ -156,19 +160,18 @@ namespace eurobin_iot {
 } // namespace eurobin_iot
 ///////////////////////////////////////////////////
 #elif defined(EUROBIN_IOT_ATOM_MATRIX)
-
+// Atom Matrix
 namespace eurobin_iot {
     // Version for M5Core2
     void Node::init()
     {
         init_m5();
-		//M5.dis.drawpix(0, 0x00ff00);        
+        
         init_wifi();
-		//M5.dis.drawpix(1, 0x00ff00);        
+		        
         init_sensors();
-		//M5.dis.drawpix(2, 0x00ff00);
-        init_ros();
-		//M5.dis.drawpix(3, 0x00ff00);        
+		
+        init_ros();        
 
     }
 
@@ -202,8 +205,8 @@ namespace eurobin_iot {
     }
 } // namespace eurobin_iot
 ///////////////////////////////
-#else defined(EUROBIN_IOT_ATOM_LITE)
-
+#else
+// Atom Lite
 namespace eurobin_iot {
     // Version for M5Core2
     void Node::init()

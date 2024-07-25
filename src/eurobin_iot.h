@@ -264,18 +264,36 @@ namespace eurobin_iot {
 
 #else
 
-namespace atom_lite {
-    void reset_mode() {
-            bool change = false;
-            while(true) {
-                CRGB color = change ? CRGB::Red : CRGB::Blue;
-                M5.dis.drawpix(0, color);
-                change = !change;
-                usleep(200000);
-            }
+    namespace atom_lite {
+        void reset_mode() {
+                bool change = false;
+                while(true) {
+                    CRGB color = change ? CRGB::Red : CRGB::Blue;
+                    M5.dis.drawpix(0, color);
+                    change = !change;
+                    usleep(200000);
+                }
+        }
     }
-}
 #endif
+
+    namespace callback_service{
+        int mode;
+        bool service = false;
+        Preferences prefs;
+        void service_callback(const void * request_msg, void * response_msg) {
+            (void) request_msg;
+            (void) response_msg;
+            service = true;
+            mode = (mode + 1) % modes::SIZE;
+            prefs.putUInt("mode", mode);
+            #ifdef EUROBIN_IOT_ATOM_MATRIX
+            atom_matrix_display::reset_id_mode_display();
+            #elif EUROBIN_IOT_ATOM_LITE
+            atom_lite::reset_mode();
+            #endif
+        }
+    }
 
     namespace key {
         #ifdef EUROBIN_IOT_CORES2
@@ -337,7 +355,9 @@ namespace atom_lite {
         int butt_mode_activated = 0;
         int16_t data_tofm2[3]; // signed because no default message for unsigned...
         char rfid_msg_buffer[25];
+        String node_name;
 		String topic_name;
+        String service_name;
 
         // micro-ros stuffs
         rcl_node_t node;
@@ -346,6 +366,7 @@ namespace atom_lite {
         rclc_executor_t executor = rclc_executor_get_zero_initialized_executor();
         rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
         struct micro_ros_agent_locator locator;
+        rcl_service_t service;
 
         // msgs and topics
         rcl_publisher_t pub_button;
@@ -395,11 +416,15 @@ namespace atom_lite {
         }                              \
     }
 
+
+
 namespace eurobin_iot {
     void Node::init_m5()
     {
         prefs.begin("eurobin_iot");
         mode = prefs.getUInt("mode", 0);
+        callback_service::mode = mode;
+        callback_service::prefs = prefs;
         init_mode = mode;
         prefs.begin("eurobin_iot");
 #ifdef EUROBIN_IOT_ATOM_LITE
@@ -408,13 +433,12 @@ namespace eurobin_iot {
         id = prefs.getUInt("id", 0);
 #endif
 
-        Serial.printf("ROS_IOT -> MODE: %d %s\n", mode, get_mode(mode));
 #ifdef EUROBIN_IOT_CORES2
         
         ui_core2::mode = mode;
         ui_core2::id = id;
         M5.begin();
-        if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
+        if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4)
             Wire.begin(); // join i2c bus (address optional for master)
 #elif EUROBIN_IOT_ATOM_MATRIX
         String config = (0 <= id && id <= 9 ) ? "%s0%d":"%s%d";
@@ -423,7 +447,7 @@ namespace eurobin_iot {
 #ifdef ATOM
 		//     void begin(bool SerialEnable = true, bool I2CEnable = true, bool DisplayEnable = false);
 		M5.begin(true, true, true); // enable the display matrix
-        if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4 || mode == modes::TIMER)
+        if (mode == modes::TOFM2 || mode == modes::SCALE || mode == modes::TOFM4)
             Wire.begin(25,21);
 #endif
     }
@@ -431,12 +455,12 @@ namespace eurobin_iot {
     void Node::init_sensors()
     {
         // check the time-of-flight
-        if (mode == modes::TOFM2 || mode == modes::TOFM4 || mode == modes::TIMER) {
+        if (mode == modes::TOFM2 || mode == modes::TOFM4) {
             Serial.println("Initializing I2C...");
             Serial.print("Time of flight: ");
             uint8_t error = tof::check();
             if (tof::ok) {
-                if(mode != modes::TOFM2){
+                if(mode == modes::TOFM4){
 					tof_sensor.init();
 					tof_sensor.setDistanceMode(VL53L1X::Short);
   					tof_sensor.setMeasurementTimingBudget(20000);
@@ -464,6 +488,11 @@ namespace eurobin_iot {
             #ifdef EUROBIN_IOT_CORES2
             FastLED.setBrightness(0);
             #endif
+        }
+
+        // setup the timer 
+        if (mode == modes::TIMER) {
+            pinMode(22, INPUT_PULLUP);
         }
 
         // setup the hall sensor button
@@ -545,9 +574,19 @@ namespace eurobin_iot {
 
 
         printf("My ID is: %d\n", id);
-        String node_name = String("eurobin_iot_") + String(id);
+        printf("MODE: %d %s\n", mode, get_mode(mode));
+        node_name = String("eurobin_iot_") + String(id);
+        service_name = String("eurobin_iot_") + String(id);
+
         printf("ROS 2 Topic prefix: %s\n", node_name.c_str());
         RCCHECK(rclc_node_init_default(&node, node_name.c_str(), "", &support));
+
+        // create service
+        RCCHECK(rclc_service_init_default(
+            &service,
+            &node, 
+            ROSIDL_GET_SRV_TYPE_SUPPORT(std_srvs, srv, Empty),
+            service_name.c_str()));
 
         // create publishers
         /// touch button (left)
@@ -624,7 +663,7 @@ namespace eurobin_iot {
 		}
 
 		//time
-		if (tof::ok && init_mode == eurobin_iot::modes::TIMER) {
+		if (init_mode == eurobin_iot::modes::TIMER) {
 			topic_name = node_name + "/timer";
 			RCCHECK(rclc_publisher_init_default(
 				&pub_timer,
@@ -637,7 +676,16 @@ namespace eurobin_iot {
 #endif
 
         RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
-    }
+
+        std_srvs__srv__Empty_Response res;
+        std_srvs__srv__Empty_Request req;
+        RCCHECK(rclc_executor_add_service(
+            &executor, 
+            &service, 
+            &req,
+            &res,
+            callback_service::service_callback));
+        }
 
     void Node::update_sensors()
     {
@@ -657,7 +705,7 @@ namespace eurobin_iot {
         }
 
         // time-of-flight M4
-		if (tof::ok && init_mode == eurobin_iot::modes::TOFM4 && tof::ok) {
+		if (tof::ok && init_mode == eurobin_iot::modes::TOFM4) {
 			uint16_t dist = tof_sensor.read();
 			msg_tofm4.data = dist;
 			RCSOFTCHECK(rcl_publish(&pub_tofm4, &msg_tofm4, NULL));
@@ -735,9 +783,11 @@ namespace eurobin_iot {
 		}
 
         // timer
-		if (init_mode == eurobin_iot::modes::TIMER && tof::ok) {
-			uint16_t dist = tof_sensor.read();
-            msg_timer.data = (dist < 200) ? true:false;
+		if (init_mode == eurobin_iot::modes::TIMER) {
+			if (digitalRead(22)) 
+                msg_timer.data = 0;
+            else
+                msg_timer.data = 1;
             if(msg_timer.data)
                 RCSOFTCHECK(rcl_publish(&pub_timer, &msg_timer, NULL));
 		}
