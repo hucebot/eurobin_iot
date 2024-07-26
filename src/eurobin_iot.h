@@ -312,6 +312,13 @@ namespace eurobin_iot {
         static const uint8_t pin = 32;
         #endif
     }
+    namespace timer {
+        #ifdef ATOM
+        static const uint8_t pin = 22;
+        #else
+        static const uint8_t pin = 32;
+        #endif
+    }
     namespace rfid
 	{
         #ifdef EUROBIN_IOT_CORES2
@@ -492,7 +499,7 @@ namespace eurobin_iot {
 
         // setup the timer 
         if (mode == modes::TIMER) {
-            pinMode(22, INPUT_PULLUP);
+            pinMode(timer::pin, INPUT_PULLUP);
         }
 
         // setup the hall sensor button
@@ -784,12 +791,11 @@ namespace eurobin_iot {
 
         // timer
 		if (init_mode == eurobin_iot::modes::TIMER) {
-			if (digitalRead(22)) 
-                msg_timer.data = 0;
-            else
+			if (!digitalRead(timer::pin)) {
                 msg_timer.data = 1;
-            if(msg_timer.data)
                 RCSOFTCHECK(rcl_publish(&pub_timer, &msg_timer, NULL));
+            }
+            
 		}
 
         rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
