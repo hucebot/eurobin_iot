@@ -314,9 +314,9 @@ namespace eurobin_iot {
     }
     namespace timer {
         #ifdef ATOM
-        static const uint8_t pin = 22;
-        #else
         static const uint8_t pin = 32;
+        #else
+        static const uint8_t pin = 33;
         #endif
     }
     namespace rfid

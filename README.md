@@ -5,9 +5,9 @@
 The ideia is to make a software that is fairly easy to connect a sensor to the control and start to work without doing a lot of things. It use Micro Ros and ROS2 to send and receive data from the sensors. 
 ## Hardware
 
-The project support for the moment [Core2](https://docs.m5stack.com/en/core/core2) and [Atom Matrix](https://docs.m5stack.com/en/core/atom_matrix) from M5Stack.
+The project support for the moment [Core2](https://docs.m5stack.com/en/core/core2), [Atom Matrix](https://docs.m5stack.com/en/core/atom_matrix) and [Atom Lite](https://docs.m5stack.com/en/core/atom_lite) from M5Stack.
 
-### Supported sensors
+## Supported sensors
 
 All the sensors used are from the company [M5Stack](https://m5stack.com/), you can see bellow the list of sensors used.
 
@@ -17,6 +17,16 @@ All the sensors used are from the company [M5Stack](https://m5stack.com/), you c
 - [Hall](https://docs.m5stack.com/en/unit/hall)
 - [Key](https://docs.m5stack.com/en/unit/key)
 - [Rfid](https://docs.m5stack.com/en/unit/uhf_rfid)
+
+## Libraries
+ - [Micro Ros PlatformIO](https://github.com/micro-ROS/micro_ros_platformio).
+ - [M5Core2](https://github.com/m5stack/M5Core2).
+ - [M5Atom](https://github.com/m5stack/M5Atom).
+ - [FastLED](https://github.com/FastLED/FastLED).
+ - [M5Unit Scales](https://github.com/m5stack/M5Unit-Scales/).
+ - [M5Unit UHF RFID](https://github.com/m5stack/M5Unit-UHF-RFID). 
+ - [VL53L1X](https://github.com/pololu/vl53l1x-arduino).
+
 
 ## Compilation and Installation
 
@@ -28,7 +38,7 @@ apt install -y git cmake python3-pip
 ```
 It is necessary to install **Docker** because it's used to see the topics publishing and receiving.
 Clone the project and go to the folder *src/*. You need to configure the wifi so the controller can communicate with the local network. Go to the file *config_example.h* and put the information about your network, then rename to *config.h*.
-To upload the code on the Core2 or Atom Matrix, you have to go in the file **platformio.ini** and choose the enviromment you want to use (atom or  m5stack-core2), after change it, save the file so it can be updated, then you can change the code and upload on the microcontroller.
+To upload the code on the Core2 or Atom Matrix, you have to go in the file **platformio.ini** and choose the enviromment you want to use (atom-matrix,m5stack-core2 or atom-lite), after change it, save the file so it can be updated, then you can change the code and upload on the microcontroller.
 
 ## Core 2
 
