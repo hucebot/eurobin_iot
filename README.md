@@ -36,9 +36,13 @@ First, intall the packages necessary to PlarformIO handle Micro Ros.
 ```shell
 apt install -y git cmake python3-pip
 ```
-It is necessary to install **Docker** because it's used to see the topics publishing and receiving.
+It is necessary to install **Docker** because it's used to see the topics publishing and subscribing.
+
 Clone the project and go to the folder *src/*. You need to configure the wifi so the controller can communicate with the local network. Go to the file *config_example.h* and put the information about your network, then rename to *config.h*.
+
 To upload the code on the Core2 or Atom Matrix, you have to go in the file **platformio.ini** and choose the enviromment you want to use (atom-matrix,m5stack-core2 or atom-lite), after change it, save the file so it can be updated, then you can change the code and upload on the microcontroller.
+
+**Important: The Library M5Unit UHF RFID has a problem, inside it's file called UNIT_UHF_RFID.cpp, the ligne "#include "Unit_UHF_RFID.h"" shoud be "#include "UNIT_UHF_RFID.h"", you must do this change so it can build and upload correctly** 
 
 ## Core 2
 
@@ -89,11 +93,11 @@ Bellow is the output from the terminal, in this case is the distance in mm, this
 
 ## Atom Matrix
 
-Here is a image of the Atom Matrix running the code.
+Here is an image of the Atom Matrix running the code. It's running on a ESP32 Pico and It has a button and a Matrix of Leds 5x5.
 
 ![image6](images/image6.jpeg)
 
-Because the microcontroller does not have a screen (It has a 5x5 matrix of leds), we have had to change the logic in how to show the information. 
+Because the microcontroller does not have a screen, we have had to change the logic in how to show the information. 
 In the Image, you can see a red letter "E" and 2 green leds. The letter E actually makes part of the word Scale, so this is indicating the mode (sensor) in red color, the word scroll all the time to show the mode, the ID is showed too following the mode in white color. You can change the color of booth in the code (variables colorMode and colorID).
 
 The first green led (the higher one) indicates that the connection with the network was successful, the contrary it would show a red led. When you turn on the atom, it can starts with a led red but it's advised to wait a little becase the controller tries several times to connect with the network, so it can turn in green after some time.
@@ -109,6 +113,9 @@ To change the ID, it's just necessary to keep pressing the button for 5 seconds,
 ![image8](images/image8.jpeg)
 
 
+## Atom Lite
+
+The Atom Lite 
 
 
 
