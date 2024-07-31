@@ -44,6 +44,13 @@ To upload the code on the Core2 or Atom Matrix, you have to go in the file **pla
 
 **Important: The Library M5Unit UHF RFID has a problem, inside it's file called UNIT_UHF_RFID.cpp, the ligne "#include "Unit_UHF_RFID.h"" shoud be "#include "UNIT_UHF_RFID.h"", you must do this change so it can build and upload correctly** 
 
+Important 2: Before use any command of ROS2, you must create a docker container using the command: 
+
+```shell
+docker run -it --net host ros:humble
+```
+
+
 ## Core 2
 
 Here is a image of a Core2 running the code.
@@ -115,8 +122,43 @@ To change the ID, it's just necessary to keep pressing the button for 5 seconds,
 
 ## Atom Lite
 
-The Atom Lite 
+The Atom Lite it's very similar to the Atom Matrix, the only differences are that the Lite does not have a Matrix of Leds, It has only a button and a Led. Bellow is a photo of the Atom Lite running the code
 
+![image9](images/image9.jpeg)
+
+The Led indicates the status of the connection with the network. If it's connected, the led will be green, if not, it will be red.
+
+The button is used to change the mode (the sensor the controller is using), keep pressing the button of 5 seconds, after this, the Led will start to blink(red and blue), this means you can reset the controller to change the mode.
+
+Because the lack of screen or more leds, we can not show the ID and Mode of the controller. You can set the controller directly on the code by going to the file *config_example.h* and change the variable *id* from the namespace *atom_lite*. To see the Mode, you can do it by cheking the topics that are activated (using the command "ros2 topic list"), because you already know the id, you know what is the mode by the name of the topic. Anothe way to check the Mode is seeing the Serial Monitor, there you will find usefull informations such as the Id, mode, status of the connection with the network and etc.
+
+
+## Service
+
+Service is another method of communication for nodes, beside the topic. The difference between Service and Topic is that the second aways allow the node to subscribe the data stream and get continual updates while the first will send information only when asked for the client. In our case we will use the service to send a command on the terminal to change the Mode of the controller. 
+
+Create a docker container to see and use the services:
+
+```shell
+docker run -it --net host ros:humble
+```
+
+To see all the services available, use the command:
+
+```shell
+ros2 service list
+```
+
+![image10](images/image10.png)
+
+
+We use a service that is already availble in the library: Empty. No actual data is exchanged between the server and the client. To change the Mode, use the command:
+
+```shell
+ros2 service call <name_service> std_srvs/srv/Empty
+```
+
+For the Core2, you will see that the mode changed on the screen, you can run again the command until it has the Mode you want, after just restart the controller. For Atom Matrix and Atom Lite, when the command is sent, they will start to blink (the same thing when you changed manually using the bottons), after that, restart the controller and use the command again to change to the next mode, repeat this until you have what you want.
 
 
 # Visualising Information in 3 Contexts with GUI
@@ -163,7 +205,7 @@ ros2 launch <name of the package> parameters_launch.py
 
 This will start the node listener, this node is going to receive all the data from the sensors and open the UI window to see the information, you can see it on the terminal.
 
-![image9](images/image9.png)
+![image11](images/image11.png)
 
 
 
