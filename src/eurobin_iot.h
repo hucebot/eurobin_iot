@@ -43,7 +43,7 @@ namespace eurobin_iot {
     namespace atom_matrix_display {
         char message_scroll[100];
 	    uint8_t currentOffset = 0; // Current offset for scrolling
-        const long interval = 1000; 
+        const long interval = 2000; 
 	    unsigned long last_time, current_time;
 	    uint8_t count_clicks = 0;
         CRGB colorMode = CRGB::Red;
@@ -678,6 +678,8 @@ namespace eurobin_iot {
 				ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Bool),
 				topic_name.c_str()));
 		}
+
+        printf("ROS 2 Topic name: %s\n", topic_name.c_str());        
 #ifdef EUROBIN_IOT_CORES2
         ui_core2::topic_name = topic_name;
 #endif
@@ -794,6 +796,9 @@ namespace eurobin_iot {
 			if (!digitalRead(timer::pin)) {
                 msg_timer.data = 1;
                 RCSOFTCHECK(rcl_publish(&pub_timer, &msg_timer, NULL));
+            }
+            else {
+                msg_timer.data = 0;
             }
             
 		}
