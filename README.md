@@ -203,7 +203,7 @@ A parameter is a configuration value of a node, it's the settings of a node. A n
  - fridge: capteur1 = sensor rfid
  - meta_node: capteur1 = Door / capteur2 = top drawer / capteur3 = bottom drawer
 
-![image12](images/image12.png)
+![image13](images/image13.png)
 
 Inside the container, go to the folder *ros2_ws* and write the commands:
 
