@@ -13,6 +13,9 @@ namespace eurobin_iot {
             static constexpr unsigned port = 8888;
             static constexpr int ip[4] = {192, 168, 50, 100};
         }
+        namespace atom_lite {
+            static const unsigned id = 26; // Id for the atom lite
+        }
     }
 }
 
