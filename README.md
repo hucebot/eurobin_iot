@@ -241,13 +241,13 @@ The cables of the sensor are:
 
  ![image15](images/circuit2.png)
 
- And use this special cables to connect the controller
+ And use this cable to connect the controller
 
  ![image15](images/cable.jpeg)
 
  The cables are:
-    - White: GPIO
-    - Black: GND
+- White: GPIO
+- Black: GND
 
 The red and yellow cable are not used.
 
