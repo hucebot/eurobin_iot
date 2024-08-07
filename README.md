@@ -11,8 +11,8 @@ The project support for the moment [Core2](https://docs.m5stack.com/en/core/core
 
 All the sensors used are from the company [M5Stack](https://m5stack.com/) (except the Photoelectric Sensor), you can see bellow the list of sensors used.
 
-- [Time of Flight M2 (Tof)](https://docs.m5stack.com/en/unit/TOF)
-- [Time of Flight M4 (tof)](https://docs.m5stack.com/en/unit/Unit-ToF4M)
+- [Time of Flight M2 (ToF)](https://docs.m5stack.com/en/unit/TOF)
+- [Time of Flight M4 (ToF)](https://docs.m5stack.com/en/unit/Unit-ToF4M)
 - [Scale](https://docs.m5stack.com/en/unit/scales)
 - [Hall](https://docs.m5stack.com/en/unit/hall)
 - [Key](https://docs.m5stack.com/en/unit/key)
@@ -173,9 +173,19 @@ In the folder *ros2_ws/src*, there are 3 different projects:
 
 2. Detect Machine: We want to detect objects that are put inside the fridge, each object will have a tag and we will use the sensor UHF RFID to detect them. 
 
-3. Robot race: We want to count the time a robot take to move from one point to another, when the robot pass the start point, it starts to count the time, when the robot arrive in the second point, the counter will stop and the screen will show how much time took to move between the two points. In this case we will use Photoelectric Sensor to detect the robot.
+3. Robot race: We want to count the time a robot take to move from one point to another, when the robot pass the start point, it starts to count the time, when the robot arrive in the second point, the counter will stop and the screen will show how much time took to move between the two points. In this case we will use Photoelectric Sensor to detect the robot's presence.
 
 For the GUI we will use Pyqt6. 
+
+## Parameters
+
+A parameter is a configuration value of a node, it's the settings of a node. A node can store several parameters with diffent values such as string, integer, float, etc. In our case we will use parameters to inform the subscriber what is the name of the topic he must retrive the data. The name of the topic depends on the id and the mode, because in each case the mode are fixeds, we only have to worry about the ids, so you have to configurate the parameters based on the id of the controllers you are using. Go to src/name_package/lauch/parameters_launch.py and change the id, don't forgete to save the file.
+
+ - Timer: capteur1 = start point / capteur2 = end point
+ - fridge: capteur1 = sensor rfid
+ - meta_node: capteur1 = Door / capteur2 = top drawer / capteur3 = bottom drawer
+
+![image13](images/image13.png)
 
 Go to the folder docker/ and build the dockerfile to create an image. To build the file, use the command: 
 
@@ -195,16 +205,6 @@ Then execute the file with the absolute path of the folder *ros2_ws* as argument
 ./command.sh <absolute path of ros2_ws>
 ```
 
-## Parameters
-
-A parameter is a configuration value of a node, it's the settings of a node. A node can store several parameters with diffent values such as string, integer, float, etc. In our case we will use parameters to inform the subscriber what is the name of the topic he must retrive the data. The name of the topic depends on the id and the mode, because in each case the mode are fixeds, we only have to worry about the ids, so you have to configurate the parameters based on the id of the controllers you are using. Go to src/name_package/lauch/parameters_launch.py and change the id, don't forgete to save the file.
-
- - Timer: capteur1 = start point / capteur2 = end point
- - fridge: capteur1 = sensor rfid
- - meta_node: capteur1 = Door / capteur2 = top drawer / capteur3 = bottom drawer
-
-![image13](images/image13.png)
-
 Inside the container, go to the folder *ros2_ws* and write the commands:
 
 ```shell
@@ -216,13 +216,44 @@ ros2 launch <name of the package> parameters_launch.py
 
 Every time you change the ID on the code, you must execute these commands again.
 
-This will start the node listener, this node is going to receive all the data from the sensors and open the UI window to see the information, you can see it on the terminal.
+This will start the node listener, this node is going to receive all the data from the sensors and open the UI window to see the information, you can see it on the terminal too.
 
 ![image11](images/image11.png)
 
+## Timer Robot Race
 
+To use the timer, you have to connect the controller and the Photoelectric Sensor in a small circuit (see the image bellow), the objective of this circuit is to link both things with security (without damaging the controller). You have to pay attenction when connect the cables on the pins of the circuit.
 
+![image14](images/circuit_general.jpeg)
 
+To Connect the Photoelectric Sensor, you must follow the image bellow:
+
+![image15](images/circuit.png)
+
+The cables of the sensor are:
+ - White: Signal
+ - Brown: Positive
+ - Blue: Negative
+
+ The black wire is not used. 
+
+ To connect the controller, you must follow the image bellow:
+
+ ![image15](images/circuit2.png)
+
+ And use this special cables to connect the controller
+
+ ![image15](images/cable.jpeg)
+
+ The cables are:
+    - White: GPIO
+    - Black: GND
+
+The red and yellow cable are not used.
+
+Connect the 12v charger to the circuit. The image bellow shows the interface of the timer.
+
+![image11](images/image12.png)
 
 ## Funding
 
