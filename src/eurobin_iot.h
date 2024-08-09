@@ -141,7 +141,6 @@ namespace eurobin_iot {
         }
 
         void displayMessageFrame() {
-            //M5.dis.clear();
             bool mode_number = true;
             clear();
             int len = strlen(message_scroll);
@@ -179,7 +178,6 @@ namespace eurobin_iot {
 
             // SSID
             M5.Lcd.fillRect(5,20,310,35, DARKGREY);
-            //M5.Lcd.fillRect(185,35, 130, 20, DARKGREY);
             M5.Lcd.setCursor(5, 20);
             M5.Lcd.printf("SSID:\n");
             M5.Lcd.setTextColor(GREEN);
@@ -189,7 +187,6 @@ namespace eurobin_iot {
             M5.Lcd.setTextColor(WHITE);
 
             // RSSI
-            //M5.Lcd.fillRect(190,20,125,20, DARKGREY);
             M5.Lcd.setCursor(193, 20);
             M5.Lcd.setTextColor(WHITE);
             M5.lcd.print("RSSI: ");
@@ -699,9 +696,6 @@ namespace eurobin_iot {
     void Node::update_sensors()
     {
         M5.update();
-
-        //battery = M5.Axp.GetBatVoltage();
-		//battery_percentage = (battery < 3.2) ? 0:(battery - 3.2) * 100;
 
         // time-of-flight M2
         if (tof::ok && init_mode == modes::TOFM2) {

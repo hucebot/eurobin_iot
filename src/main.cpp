@@ -43,7 +43,6 @@
 #ifdef EUROBIN_IOT_CORES2
 // Core 2
 namespace eurobin_iot {
-    // Version for M5Core2
     void Node::init()
     {
         init_m5();
@@ -162,7 +161,6 @@ namespace eurobin_iot {
 #elif defined(EUROBIN_IOT_ATOM_MATRIX)
 // Atom Matrix
 namespace eurobin_iot {
-    // Version for M5Core2
     void Node::init()
     {
         init_m5();
@@ -208,7 +206,6 @@ namespace eurobin_iot {
 #else
 // Atom Lite
 namespace eurobin_iot {
-    // Version for M5Core2
     void Node::init()
     {
         init_m5();
@@ -223,12 +220,6 @@ namespace eurobin_iot {
 
     void Node::loop()
     {
-        /* atom_lite_display::display(mode, atom_lite_display::color);
-        if(atom_lite_display::color == 4) 
-            atom_lite_display::color = 0;
-        else
-            atom_lite_display::color++; */
-        
         update_sensors();
 
         if(M5.Btn.pressedFor(5000)) {
