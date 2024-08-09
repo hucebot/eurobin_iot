@@ -1,0 +1,22 @@
+[0.972s] Invoking command in '/ros2_ws/src/fridge': PYTHONPATH=/ros2_ws/build/fridge/prefix_override:/ros2_ws/install/fridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/fridge build --build-base /ros2_ws/build/fridge/build install --record /ros2_ws/build/fridge/install.log --single-version-externally-managed install_data
+[1.168s] running egg_info
+[1.169s] writing ../../build/fridge/fridge.egg-info/PKG-INFO
+[1.169s] writing dependency_links to ../../build/fridge/fridge.egg-info/dependency_links.txt
+[1.169s] writing entry points to ../../build/fridge/fridge.egg-info/entry_points.txt
+[1.169s] writing requirements to ../../build/fridge/fridge.egg-info/requires.txt
+[1.170s] writing top-level names to ../../build/fridge/fridge.egg-info/top_level.txt
+[1.170s] reading manifest file '../../build/fridge/fridge.egg-info/SOURCES.txt'
+[1.171s] adding license file 'LICENSE'
+[1.171s] writing manifest file '../../build/fridge/fridge.egg-info/SOURCES.txt'
+[1.172s] running build
+[1.172s] running build_py
+[1.172s] running install
+[1.172s] running install_lib
+[1.173s] running install_data
+[1.173s] running install_egg_info
+[1.175s] removing '/ros2_ws/install/fridge/lib/python3.10/site-packages/fridge-0.0.0-py3.10.egg-info' (and everything under it)
+[1.175s] Copying ../../build/fridge/fridge.egg-info to /ros2_ws/install/fridge/lib/python3.10/site-packages/fridge-0.0.0-py3.10.egg-info
+[1.176s] running install_scripts
+[1.196s] Installing listener script to /ros2_ws/install/fridge/lib/fridge
+[1.196s] writing list of installed files to '/ros2_ws/build/fridge/install.log'
+[1.237s] Invoked command in '/ros2_ws/src/fridge' returned '0': PYTHONPATH=/ros2_ws/build/fridge/prefix_override:/ros2_ws/install/fridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/fridge build --build-base /ros2_ws/build/fridge/build install --record /ros2_ws/build/fridge/install.log --single-version-externally-managed install_data

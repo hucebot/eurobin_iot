@@ -1,0 +1,92 @@
+[0.000000] (-) TimerEvent: {}
+[0.000450] (fridge) JobQueued: {'identifier': 'fridge', 'dependencies': OrderedDict()}
+[0.000497] (meta_node) JobQueued: {'identifier': 'meta_node', 'dependencies': OrderedDict()}
+[0.000520] (timer) JobQueued: {'identifier': 'timer', 'dependencies': OrderedDict()}
+[0.000540] (fridge) JobStarted: {'identifier': 'fridge'}
+[0.008890] (meta_node) JobStarted: {'identifier': 'meta_node'}
+[0.014529] (timer) JobStarted: {'identifier': 'timer'}
+[0.099172] (-) TimerEvent: {}
+[0.199421] (-) TimerEvent: {}
+[0.299669] (-) TimerEvent: {}
+[0.399978] (-) TimerEvent: {}
+[0.500240] (-) TimerEvent: {}
+[0.600558] (-) TimerEvent: {}
+[0.700804] (-) TimerEvent: {}
+[0.801072] (-) TimerEvent: {}
+[0.901380] (-) TimerEvent: {}
+[0.955617] (fridge) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/fridge', 'build', '--build-base', '/ros2_ws/build/fridge/build', 'install', '--record', '/ros2_ws/build/fridge/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/fridge', 'env': {'HOSTNAME': 'gianlucca-Precision-7530', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/', 'ROS_PYTHON_VERSION': '3', 'COLCON_PREFIX_PATH': '/ros2_ws/install', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':1', 'LANG': 'C.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/ros2_ws/install/timer:/ros2_ws/install/meta_node:/ros2_ws/install/fridge:/opt/ros/humble', 'PWD': '/ros2_ws/build/fridge', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/fridge/prefix_override:/ros2_ws/install/fridge/lib/python3.10/site-packages:/ros2_ws/install/timer/lib/python3.10/site-packages:/ros2_ws/install/meta_node/lib/python3.10/site-packages:/ros2_ws/install/fridge/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[0.961604] (timer) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/timer', 'build', '--build-base', '/ros2_ws/build/timer/build', 'install', '--record', '/ros2_ws/build/timer/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/timer', 'env': {'HOSTNAME': 'gianlucca-Precision-7530', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/', 'ROS_PYTHON_VERSION': '3', 'COLCON_PREFIX_PATH': '/ros2_ws/install', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':1', 'LANG': 'C.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/ros2_ws/install/timer:/ros2_ws/install/meta_node:/ros2_ws/install/fridge:/opt/ros/humble', 'PWD': '/ros2_ws/build/timer', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/timer/prefix_override:/ros2_ws/install/timer/lib/python3.10/site-packages:/ros2_ws/install/timer/lib/python3.10/site-packages:/ros2_ws/install/meta_node/lib/python3.10/site-packages:/ros2_ws/install/fridge/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[0.964813] (meta_node) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/meta_node', 'build', '--build-base', '/ros2_ws/build/meta_node/build', 'install', '--record', '/ros2_ws/build/meta_node/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/meta_node', 'env': {'HOSTNAME': 'gianlucca-Precision-7530', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/', 'ROS_PYTHON_VERSION': '3', 'COLCON_PREFIX_PATH': '/ros2_ws/install', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':1', 'LANG': 'C.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/ros2_ws/install/timer:/ros2_ws/install/meta_node:/ros2_ws/install/fridge:/opt/ros/humble', 'PWD': '/ros2_ws/build/meta_node', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/meta_node/prefix_override:/ros2_ws/install/meta_node/lib/python3.10/site-packages:/ros2_ws/install/timer/lib/python3.10/site-packages:/ros2_ws/install/meta_node/lib/python3.10/site-packages:/ros2_ws/install/fridge/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.001498] (-) TimerEvent: {}
+[1.101778] (-) TimerEvent: {}
+[1.160091] (fridge) StdoutLine: {'line': b'running egg_info\n'}
+[1.160765] (fridge) StdoutLine: {'line': b'writing ../../build/fridge/fridge.egg-info/PKG-INFO\n'}
+[1.161019] (fridge) StdoutLine: {'line': b'writing dependency_links to ../../build/fridge/fridge.egg-info/dependency_links.txt\n'}
+[1.161213] (fridge) StdoutLine: {'line': b'writing entry points to ../../build/fridge/fridge.egg-info/entry_points.txt\n'}
+[1.161440] (fridge) StdoutLine: {'line': b'writing requirements to ../../build/fridge/fridge.egg-info/requires.txt\n'}
+[1.161520] (fridge) StdoutLine: {'line': b'writing top-level names to ../../build/fridge/fridge.egg-info/top_level.txt\n'}
+[1.161699] (timer) StdoutLine: {'line': b'running egg_info\n'}
+[1.162268] (timer) StdoutLine: {'line': b'writing ../../build/timer/timer.egg-info/PKG-INFO\n'}
+[1.162446] (timer) StdoutLine: {'line': b'writing dependency_links to ../../build/timer/timer.egg-info/dependency_links.txt\n'}
+[1.162652] (timer) StdoutLine: {'line': b'writing entry points to ../../build/timer/timer.egg-info/entry_points.txt\n'}
+[1.162877] (timer) StdoutLine: {'line': b'writing requirements to ../../build/timer/timer.egg-info/requires.txt\n'}
+[1.163015] (timer) StdoutLine: {'line': b'writing top-level names to ../../build/timer/timer.egg-info/top_level.txt\n'}
+[1.163554] (fridge) StdoutLine: {'line': b"reading manifest file '../../build/fridge/fridge.egg-info/SOURCES.txt'\n"}
+[1.164378] (fridge) StdoutLine: {'line': b"adding license file 'LICENSE'\n"}
+[1.164926] (fridge) StdoutLine: {'line': b"writing manifest file '../../build/fridge/fridge.egg-info/SOURCES.txt'\n"}
+[1.165138] (fridge) StdoutLine: {'line': b'running build\n'}
+[1.165220] (fridge) StdoutLine: {'line': b'running build_py\n'}
+[1.165340] (timer) StdoutLine: {'line': b"reading manifest file '../../build/timer/timer.egg-info/SOURCES.txt'\n"}
+[1.165541] (fridge) StdoutLine: {'line': b'running install\n'}
+[1.165786] (fridge) StdoutLine: {'line': b'running install_lib\n'}
+[1.165988] (timer) StdoutLine: {'line': b"adding license file 'LICENSE'\n"}
+[1.166442] (meta_node) StdoutLine: {'line': b'running egg_info\n'}
+[1.166908] (timer) StdoutLine: {'line': b"writing manifest file '../../build/timer/timer.egg-info/SOURCES.txt'\n"}
+[1.167141] (timer) StdoutLine: {'line': b'running build\n'}
+[1.167219] (timer) StdoutLine: {'line': b'running build_py\n'}
+[1.167588] (meta_node) StdoutLine: {'line': b'writing ../../build/meta_node/meta_node.egg-info/PKG-INFO\n'}
+[1.167893] (timer) StdoutLine: {'line': b'copying timer/main.py -> /ros2_ws/build/timer/build/lib/timer\n'}
+[1.168127] (fridge) StdoutLine: {'line': b'running install_data\n'}
+[1.168241] (meta_node) StdoutLine: {'line': b'writing dependency_links to ../../build/meta_node/meta_node.egg-info/dependency_links.txt\n'}
+[1.168320] (fridge) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.168387] (timer) StdoutLine: {'line': b'running install\n'}
+[1.168454] (meta_node) StdoutLine: {'line': b'writing entry points to ../../build/meta_node/meta_node.egg-info/entry_points.txt\n'}
+[1.168519] (meta_node) StdoutLine: {'line': b'writing requirements to ../../build/meta_node/meta_node.egg-info/requires.txt\n'}
+[1.168583] (meta_node) StdoutLine: {'line': b'writing top-level names to ../../build/meta_node/meta_node.egg-info/top_level.txt\n'}
+[1.168646] (timer) StdoutLine: {'line': b'running install_lib\n'}
+[1.168955] (timer) StdoutLine: {'line': b'copying /ros2_ws/build/timer/build/lib/timer/main.py -> /ros2_ws/install/timer/lib/python3.10/site-packages/timer\n'}
+[1.169294] (fridge) StdoutLine: {'line': b"removing '/ros2_ws/install/fridge/lib/python3.10/site-packages/fridge-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.169599] (fridge) StdoutLine: {'line': b'Copying ../../build/fridge/fridge.egg-info to /ros2_ws/install/fridge/lib/python3.10/site-packages/fridge-0.0.0-py3.10.egg-info\n'}
+[1.169687] (timer) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/timer/lib/python3.10/site-packages/timer/main.py to main.cpython-310.pyc\n'}
+[1.169783] (meta_node) StdoutLine: {'line': b"reading manifest file '../../build/meta_node/meta_node.egg-info/SOURCES.txt'\n"}
+[1.170482] (fridge) StdoutLine: {'line': b'running install_scripts\n'}
+[1.170616] (timer) StdoutLine: {'line': b'running install_data\n'}
+[1.170763] (meta_node) StdoutLine: {'line': b"writing manifest file '../../build/meta_node/meta_node.egg-info/SOURCES.txt'\n"}
+[1.170859] (meta_node) StdoutLine: {'line': b'running build\n'}
+[1.170926] (meta_node) StdoutLine: {'line': b'running build_py\n'}
+[1.170991] (timer) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.171125] (meta_node) StdoutLine: {'line': b'running install\n'}
+[1.171446] (meta_node) StdoutLine: {'line': b'running install_lib\n'}
+[1.172245] (timer) StdoutLine: {'line': b"removing '/ros2_ws/install/timer/lib/python3.10/site-packages/timer-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.172621] (timer) StdoutLine: {'line': b'Copying ../../build/timer/timer.egg-info to /ros2_ws/install/timer/lib/python3.10/site-packages/timer-0.0.0-py3.10.egg-info\n'}
+[1.172792] (meta_node) StdoutLine: {'line': b'running install_data\n'}
+[1.172947] (meta_node) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.173475] (timer) StdoutLine: {'line': b'running install_scripts\n'}
+[1.174354] (meta_node) StdoutLine: {'line': b"removing '/ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.174675] (meta_node) StdoutLine: {'line': b'Copying ../../build/meta_node/meta_node.egg-info to /ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node-0.0.0-py3.10.egg-info\n'}
+[1.175639] (meta_node) StdoutLine: {'line': b'running install_scripts\n'}
+[1.189351] (fridge) StdoutLine: {'line': b'Installing listener script to /ros2_ws/install/fridge/lib/fridge\n'}
+[1.189661] (fridge) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/fridge/install.log'\n"}
+[1.193206] (timer) StdoutLine: {'line': b'Installing listener script to /ros2_ws/install/timer/lib/timer\n'}
+[1.193530] (timer) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/timer/install.log'\n"}
+[1.195592] (meta_node) StdoutLine: {'line': b'Installing listener script to /ros2_ws/install/meta_node/lib/meta_node\n'}
+[1.195810] (meta_node) StdoutLine: {'line': b'Installing receiver script to /ros2_ws/install/meta_node/lib/meta_node\n'}
+[1.196088] (meta_node) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/meta_node/install.log'\n"}
+[1.201912] (-) TimerEvent: {}
+[1.216582] (fridge) CommandEnded: {'returncode': 0}
+[1.228950] (fridge) JobEnded: {'identifier': 'fridge', 'rc': 0}
+[1.231509] (timer) CommandEnded: {'returncode': 0}
+[1.237612] (timer) JobEnded: {'identifier': 'timer', 'rc': 0}
+[1.238227] (meta_node) CommandEnded: {'returncode': 0}
+[1.243389] (meta_node) JobEnded: {'identifier': 'meta_node', 'rc': 0}
+[1.244121] (-) EventReactorShutdown: {}

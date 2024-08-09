@@ -1,0 +1,22 @@
+[0.428s] Invoking command in '/ros2_ws/src/meta_node': PYTHONPATH=/ros2_ws/build/meta_node/prefix_override:/ros2_ws/install/meta_node/lib/python3.10/site-packages: /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/meta_node build --build-base /ros2_ws/build/meta_node/build install --record /ros2_ws/build/meta_node/install.log --single-version-externally-managed install_data
+[0.592s] running egg_info
+[0.593s] writing ../../build/meta_node/meta_node.egg-info/PKG-INFO
+[0.593s] writing dependency_links to ../../build/meta_node/meta_node.egg-info/dependency_links.txt
+[0.593s] writing entry points to ../../build/meta_node/meta_node.egg-info/entry_points.txt
+[0.594s] writing requirements to ../../build/meta_node/meta_node.egg-info/requires.txt
+[0.594s] writing top-level names to ../../build/meta_node/meta_node.egg-info/top_level.txt
+[0.595s] reading manifest file '../../build/meta_node/meta_node.egg-info/SOURCES.txt'
+[0.597s] writing manifest file '../../build/meta_node/meta_node.egg-info/SOURCES.txt'
+[0.597s] running build
+[0.597s] running build_py
+[0.597s] running install
+[0.598s] running install_lib
+[0.599s] running install_data
+[0.599s] running install_egg_info
+[0.600s] removing '/ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node-0.0.0-py3.10.egg-info' (and everything under it)
+[0.601s] Copying ../../build/meta_node/meta_node.egg-info to /ros2_ws/install/meta_node/lib/python3.10/site-packages/meta_node-0.0.0-py3.10.egg-info
+[0.602s] running install_scripts
+[0.621s] Installing listener script to /ros2_ws/install/meta_node/lib/meta_node
+[0.621s] Installing receiver script to /ros2_ws/install/meta_node/lib/meta_node
+[0.621s] writing list of installed files to '/ros2_ws/build/meta_node/install.log'
+[0.643s] Invoked command in '/ros2_ws/src/meta_node' returned '0': PYTHONPATH=/ros2_ws/build/meta_node/prefix_override:/ros2_ws/install/meta_node/lib/python3.10/site-packages: /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/meta_node build --build-base /ros2_ws/build/meta_node/build install --record /ros2_ws/build/meta_node/install.log --single-version-externally-managed install_data
