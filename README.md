@@ -5,11 +5,11 @@
 The ideia is to make a software that is fairly easy to connect a sensor to the control and start to work without doing a lot of things. It use Micro Ros and ROS2 to send and receive data from the sensors. 
 ## Hardware
 
-The project support for the moment [Core2](https://docs.m5stack.com/en/core/core2), [Atom Matrix](https://docs.m5stack.com/en/core/atom_matrix) and [Atom Lite](https://docs.m5stack.com/en/core/atom_lite) from M5Stack.
+The project supports for the moment [Core2](https://docs.m5stack.com/en/core/core2), [Atom Matrix](https://docs.m5stack.com/en/core/atom_matrix) and [Atom Lite](https://docs.m5stack.com/en/core/atom_lite) from M5Stack.
 
 ## Supported sensors
 
-All the sensors used are from the company [M5Stack](https://m5stack.com/) (except the Photoelectric Sensor), you can see bellow the list of sensors used.
+All the sensors used are from the company [M5Stack](https://m5stack.com/) (except the Photoelectric Sensor), you can see bellow the list of all sensors used.
 
 - [Time of Flight M2 (ToF)](https://docs.m5stack.com/en/unit/TOF)
 - [Time of Flight M4 (ToF)](https://docs.m5stack.com/en/unit/Unit-ToF4M)
@@ -32,7 +32,7 @@ All the sensors used are from the company [M5Stack](https://m5stack.com/) (excep
 ## Compilation and Installation
 
 The project was developed under the Linux Ubuntu 22.04.4 LTS and PlatformIO from VScode.  
-First, intall the packages necessary to PlarformIO handle Micro Ros.
+First, install the packages necessary to PlarformIO handle Micro Ros.
 
 ```shell
 apt install -y git cmake python3-pip
@@ -41,11 +41,11 @@ It is necessary to install **Docker** because it's used to see the topics publis
 
 Clone the project and go to the folder *src/*. You need to configure the wifi so the controller can communicate with the local network. Go to the file *config_example.h* and put the information about your network, then rename to *config.h*.
 
-To upload the code on the Core2 or Atom Matrix, you have to go in the file **platformio.ini** and choose the enviromment you want to use (atom-matrix,m5stack-core2 or atom-lite), after change it, save the file so it can be updated, then you can change the code and upload on the microcontroller.
+To upload the code on the Core2 or Atom Matrix or Atom Lite, you have to go in the file **platformio.ini** and choose the enviromment you want to use (atom-matrix,m5stack-core2 or atom-lite). After making the changes, save the file so it can be updated. You can then modify the code and upload it to the microcontroller.
 
-**Important: The Library M5Unit UHF RFID has a problem, inside it's file called UNIT_UHF_RFID.cpp, the ligne "#include "Unit_UHF_RFID.h"" shoud be "#include "UNIT_UHF_RFID.h"", you must do this change so it can build and upload correctly** 
+**Important: The M5Unit UHF RFID Library has a bug. In its file called UNIT_UHF_RFID.cpp, the line "#include "Unit_UHF_RFID.h"" should be "#include "UNIT_UHF_RFID.h"". You must make this change so it can build and upload correctly.** 
 
-Important 2: Before use any command of ROS2, you must create a docker container using the command: 
+Important 2: Before using any command of ROS2, you must create a docker container using the command: 
 
 ```shell
 docker run -it --net host ros:humble
@@ -59,24 +59,25 @@ Here is a image of a Core2 running the code.
 ![image1](images/image1.jpeg)
 
 You can see on the screen some information such as SSID, RSSI and IP Adress. You can see the **mode** that inform what sensor is working on the Core2, in this case it's the sensor ToFM4, it has the data the sensor is seeding to the control. The big number in a yellow background, this is the ID of the controller, it must be a unique ID for each control nad it is used to send information to a topic using ROS2, if there are 2 controllers with the same ID, you have to change it for one of them.
-The power show the level of battery in percentage the Core2 has at the moment, it's updated each minute in the screen.
 
-The information **Topic** showed on the screen informs you what is the name of the topic that is publishing the information of the sensor.
+The power indicator shows the battery level percentage, updated each minute on the screen.
 
-If you want to change the sensor (mode), touch the middle button (the one bellow the sign "mode" in yellow box) and keep it pressed for 5 seconds, it will change for the next mode, you can keep pressing the button to change multiple times the mode until it reach the wished mode. After you have the mode you want, connect the sensor and reset the Core2. It will restart the control and it's going to work with the sensor connected.
+The Topic section on the screen informs you of the topic name publishing the sensor information.
+
+To change the sensor (mode), press and hold the middle button (below the "mode" label in the yellow box) for 5 seconds. The mode will switch to the next one. You can keep pressing the button to cycle through modes until you reach the desired one. After selecting the mode, connect the sensor and reset the Core2. It will restart with the connected sensor.
 
 ![image2](images/image2.jpeg)
 
-If you want to change the ID, keep pressed the right button, it's going to start a counter and you have to keep the button pressed until the counter reach 50, after that the Core2 will restart automatically with a new ID.
+To change the ID, press and hold the right button until a counter reaches 50. The Core2 will then automatically restart with a new ID.
 
 ![image3](images/image3.jpeg)
 
-You can see if the Core2 is really publishing this information in a topic, you just have to create a docker container using the command bellow
+You can check if the Core2 is publishing this information by creating a Docker container using the following command:
 
 ```shell
 docker run -it --net host ros:humble
 ```
-Inside the container you can check the topics working at the moment with the command 
+Inside the container, check the active topics with:
 
 ```shell
 ros2 topic list
@@ -95,48 +96,48 @@ In our case, we want to see the distance of the sensor ToF in the control with t
 ros2 topic echo eurobin_iot_0/tofm4
 ```
 
-Bellow is the output from the terminal, in this case is the distance in mm, this is the information the sensor is giving to the controller and then being publishing it. 
+Below is the output from the terminal showing the distance in millimeters, which is the information the sensor sends to the controller and then publishes.
 
 ![image5](images/image5.png)
 
 ## Atom Matrix
 
-Here is an image of the Atom Matrix running the code. It's running on a ESP32 Pico and It has a button and a Matrix of Leds 5x5.
+Here is an image of the Atom Matrix running the code. It's running on a ESP32 Pico and has a button and a 5x5 LED Matrix. 
 
 ![image6](images/image6.jpeg)
 
-Because the microcontroller does not have a screen, we have had to change the logic in how to show the information. 
-In the Image, you can see a red letter "E" and 2 green leds. The letter E actually makes part of the word Scale, so this is indicating the mode (sensor) in red color, the word scroll all the time to show the mode, the ID is showed too following the mode in white color. You can change the color of booth in the code (variables colorMode and colorID).
+Because the microcontroller does not have a screen, we had to change how we display the information.
+In the image, you can see a red letter "E" and two green LEDs. The letter "E" is part of the word "Scale," indicating the mode (sensor) in red. The word scrolls continuously to show the mode, and the ID is shown in white after the mode. You can change the colors in the code (variables colorMode and colorID).
 
-The first green led (the higher one) indicates that the connection with the network was successful, the contrary it would show a red led. When you turn on the atom, it can starts with a led red but it's advised to wait a little becase the controller tries several times to connect with the network, so it can turn in green after some time.
+The first green LED (the upper one) indicates that the network connection was successful; otherwise, it would be red. When you turn on the Atom, the LED might initially be red, but it will likely turn green after the controller retries connecting to the network several times.
 
-The second green led(the lower one) indicates that the connection I2C or the initialization with the sensor was successful, if not it would display a red led.  Only the sensors Tof (M2 and M4), Scale and Rfid shows this led, the others such as Hall and Key does not show because it's is just a digital read. 
+The second green LED (the lower one) indicates that the I2C connection or sensor initialization was successful; otherwise, it would be red. Only the ToF (M2 and M4), Scale, and RFID sensors show this LED; others like Hall and Key do not, as they only involve a digital read.
 
-To change the mode it's just necessary to make a double click, if it's done correctly, the first column will start to blink (between red and blue), this indicate you can reset the controller so it will restart with the new mode.
+To change the mode, double-click the button. If successful, the first column will start blinking (between red and blue), indicating that you can reset the controller, which will restart with the new mode.
 
 ![image7](images/image7.jpeg)
 
-To change the ID, it's just necessary to keep pressing the button for 5 seconds, after this, all the matrix of leds will be blue to indicate that the controller is going to reset itself and when turn on again, it will have a new id.
+To change the ID, press and hold the button for 5 seconds. The entire LED matrix will turn blue, indicating that the controller will reset and, upon restart, will have a new ID.
 
 ![image8](images/image8.jpeg)
 
 
 ## Atom Lite
 
-The Atom Lite it's very similar to the Atom Matrix, the only differences are that the Lite does not have a Matrix of Leds, It has only a button and a Led. Bellow is a photo of the Atom Lite running the code
+The Atom Lite is similar to the Atom Matrix, but the Lite does not have a LED Matrix; it has only a button and a single LED. Below is a photo of the Atom Lite running the code:
 
 ![image9](images/image9.jpeg)
 
-The Led indicates the status of the connection with the network. If it's connected, the led will be green, if not, it will be red.
+The LED indicates the network connection status. If connected, the LED will be green; otherwise, it will be red.
 
-The button is used to change the mode (the sensor the controller is using), keep pressing the button of 5 seconds, after this, the Led will start to blink(red and blue), this means you can reset the controller to change the mode.
+The button is used to change the mode (the sensor the controller is using). Press and hold the button for 5 seconds. The LED will start blinking (red and blue), indicating that you can reset the controller to change the mode.
 
-Because the lack of screen or more leds, we can not show the ID and Mode of the controller. You can set the controller directly on the code by going to the file *config_example.h* and change the variable *id* from the namespace *atom_lite*. To see the Mode, you can do it by cheking the topics that are activated (using the command "ros2 topic list"), because you already know the id, you know what is the mode by the name of the topic. Anothe way to check the Mode is seeing the Serial Monitor, there you will find usefull informations such as the Id, mode, status of the connection with the network and etc.
+Due to the lack of a screen or more LEDs, we cannot show the ID and mode of the controller directly. You can set the controller ID in the code by modifying the config_example.h file and changing the id variable in the atom_lite namespace. To check the mode, you can see which topics are activated using the "ros2 topic list" command; knowing the ID allows you to determine the mode by the topic name. Another way to check the mode is by viewing the Serial Monitor, where you will find useful information such as ID, mode, network connection status, etc.
 
 
 ## Service
 
-Service is another method of communication for nodes, beside the topic. The difference between Service and Topic is that the second aways allow the node to subscribe the data stream and get continual updates while the first will send information only when asked for the client. In our case we will use the service to send a command on the terminal to change the Mode of the controller. 
+Service is another method of communication for nodes besides topics. The difference between Service and Topic is that the latter always allows the node to subscribe to the data stream and get continuous updates, while the former sends information only when requested by the client. In our case, we use the service to send a command via the terminal to change the controller's mode. 
 
 Create a docker container to see and use the services:
 
@@ -220,6 +221,8 @@ This will start the node listener, this node is going to receive all the data fr
 
 ![image11](images/image11.png)
 
+![image12](images/id_display.png)
+
 ## Timer Robot Race
 
 To use the timer, you have to connect the controller and the Photoelectric Sensor in a small circuit (see the image bellow), the objective of this circuit is to link both things with security (without damaging the controller). You have to pay attenction when connect the cables on the pins of the circuit.
@@ -239,13 +242,13 @@ The cables of the sensor are:
 
  To connect the controller, you must follow the image bellow:
 
- ![image15](images/circuit2.png)
+ ![image16](images/circuit2.png)
 
  And use this cable to connect the controller
 
- ![image15](images/cable.jpeg)
+ ![image17](images/cable.jpeg)
 
- The cables are:
+ The wires of the cable are:
 - White: GPIO
 - Black: GND
 
@@ -253,7 +256,7 @@ The red and yellow cable are not used.
 
 Connect the 12v charger to the circuit. The image bellow shows the interface of the timer.
 
-![image11](images/image12.png)
+![image18](images/image12.png)
 
 ## Funding
 
