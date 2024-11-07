@@ -134,6 +134,9 @@ The button is used to change the mode (the sensor the controller is using). Pres
 
 Due to the lack of a screen or more LEDs, we cannot show the ID and mode of the controller directly. You can set the controller ID in the code by modifying the config_example.h file and changing the id variable in the atom_lite namespace. To check the mode, you can see which topics are activated using the "ros2 topic list" command; knowing the ID allows you to determine the mode by the topic name. Another way to check the mode is by viewing the Serial Monitor, where you will find useful information such as ID, mode, network connection status, etc.
 
+## I2C
+
+WARNING: for an unknown reason, the I2C wires are on the connector on the back of the ATOM-Matrix and NOT on the "main" (grove) connector. You need to make your own wires for I2C devices (ToF, Scale, RFID) (see SDA and SCL here: https://docs.m5stack.com/en/core/ATOM%20Matrix).
 
 ## Service
 
